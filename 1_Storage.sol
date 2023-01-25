@@ -11,11 +11,11 @@ contract Storage {
     ];
 
     struct DataStorage {
-        uint timeStamps;
+        uint256 timeStamps;
         string data;
     }
 
-    uint public timestamp;
+    uint256 public timestamp;
 
     function store(string memory iotData) public {
         timestamp = block.timestamp;
