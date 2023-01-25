@@ -5,13 +5,13 @@ async function main() {
     //compile them in our code 
     //compile them separately 
     //http://0.0.0.0:7545
-    const provider = new ethers.providers.JsonRpcProvider("http://127.0.0.1:8545");
+    const provider = new ethers.providers.JsonRpcProvider("http://127.0.0.1:7545");
     const wallet = new ethers.Wallet(
-        "0c34e1f54d39a6bdab4096df4b3af227995bc981c7d6989e69dd19f2d6df9798",
+        "57706c2256741b7b7c864828765611ed181edc6c84be23820a5bba08c388f1fc",
         provider
     );
-    const abi = fs.readFileSync("./SimpleStorage_sol_SimpleStorage.abi", "utf8");
-    const binary = fs.readFileSync("./SimpleStorage_sol_SimpleStorage.bin", "utf8");
+    const abi = fs.readFileSync("./1_Storage_sol_Storage.abi", "utf8");
+    const binary = fs.readFileSync("./1_Storage_sol_Storage.bin", "utf8");
 
     const contractFactory = new ethers.ContractFactory(abi, binary, wallet);
     console.log("Deploying, please wait...");
