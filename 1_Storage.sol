@@ -17,21 +17,23 @@ contract Storage {
 
     uint256 public timestamp;
 
-    function store(string memory iotData) public {
+    function store(string memory iotData, uint256 amount) public {
         timestamp = block.timestamp;
         data.push(DataStorage(timestamp, iotData));
-        transfer();
+        _transfer(amount);
     }
 
-    function transfer() private view {
+    function _transfer(uint256 amount) public returns (bool) {
+        address owner = msg.sender;
+
         if (msg.sender == contractPartners[0]) {
-            //  https://medium.com/coinmonks/solidity-transfer-vs-send-vs-call-function-64c92cfc878a
-            //transfer a small amount of money to address[0]
+            _transfer(owner, contractPartners[1], amount);
+            return true;
         } else if (msg.sender == contractPartners[1]) {
-            //transfer a small amount of money to address[1]
+            _transfer(owner, contractPartners[0], amount);
+            return true;
         }
-    }
 
-    //TODO noch die 2 Adressen hineinspeichern einbauen
-    //TODO einbauchen, dass bei jeder Messung eine Überweisung stattfindet
+        return false;
+    }
 }
