@@ -1,13 +1,9 @@
-// SPDX-License-Identifier: GPL-3.0
-
-pragma solidity 0.8.7;
-
 contract Storage {
     DataStorage[] public data;
 
-    address[] contractPartners = [
-        0x157EF7ADDc804397CB5966dbCc003e163a473D0c,
-        0xe38DFE9cA9f8e23BE8dA01cDDfF741ae3fFa2DEc
+    address payable[] contractPartners = [
+        payable(0x157EF7ADDc804397CB5966dbCc003e163a473D0c),
+        payable(0xe38DFE9cA9f8e23BE8dA01cDDfF741ae3fFa2DEc)
     ];
 
     struct DataStorage {
@@ -20,17 +16,15 @@ contract Storage {
     function store(string memory iotData, uint256 amount) public {
         timestamp = block.timestamp;
         data.push(DataStorage(timestamp, iotData));
-        _transfer(amount);
+        transfer(amount);
     }
 
-    function _transfer(uint256 amount) public returns (bool) {
-        address owner = msg.sender;
-
+    function transfer(uint256 amount) public returns (bool) {
         if (msg.sender == contractPartners[0]) {
-            _transfer(owner, contractPartners[1], amount);
+            contractPartners[1].transfer(amount);
             return true;
         } else if (msg.sender == contractPartners[1]) {
-            _transfer(owner, contractPartners[0], amount);
+            contractPartners[0].transfer(amount);
             return true;
         }
 
