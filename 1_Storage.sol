@@ -13,18 +13,18 @@ contract Storage {
 
     uint256 public timestamp;
 
-    function store(string memory iotData, uint256 amount) public {
+    function store(string memory iotData) public returns (bool) {
         timestamp = block.timestamp;
         data.push(DataStorage(timestamp, iotData));
-        transfer(amount);
+        return true;
     }
 
-    function transfer(uint256 amount) public returns (bool) {
+    function transfer() public payable returns (bool) {
         if (msg.sender == contractPartners[0]) {
-            contractPartners[1].transfer(amount);
+            contractPartners[1].transfer(msg.value);
             return true;
         } else if (msg.sender == contractPartners[1]) {
-            contractPartners[0].transfer(amount);
+            contractPartners[0].transfer(msg.value);
             return true;
         }
 
