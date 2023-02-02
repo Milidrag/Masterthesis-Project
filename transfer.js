@@ -31,12 +31,12 @@ async function main() {
     console.log(result);
     console.log("new-------------");
 
-    /*     const nonce = await wallet.getTransactionCount();
-        const tx = await contract.transfer({
-            value: ethers.utils.parseUnits("1000", "gwei"),
-            nonce: nonce //TODO nonce failure check it whether I can fix it with async somehow
-        });
-        console.log(tx); */
+    const nonce = await wallet.getTransactionCount();
+    const tx = await contract.transfer({
+        value: ethers.utils.parseUnits("10000", "gwei"),
+        nonce: nonce //TODO nonce failure check it whether I can fix it with async somehow
+    });
+    console.log(tx);
 
     const dataStorage = await contract.getArr();
     console.log("Here ist the datastorage");
