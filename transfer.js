@@ -9,7 +9,7 @@ async function main() {
     //http://0.0.0.0:7545
     const provider = new ethers.providers.JsonRpcProvider(process.env.PROVIDER_ALCHEMY);
     const wallet = new ethers.Wallet(
-        process.env.PRIVATE_KEY,
+        process.env.PRIVATE_KEY_GOERLI_BOB,
         provider
     );
     const abi = fs.readFileSync("./1_Storage_sol_Storage.abi", "utf8");
@@ -18,7 +18,7 @@ async function main() {
     const contractFactory = new ethers.ContractFactory(abi, binary, wallet);
     console.log("Deploying, please wait...");
     const contract = await contractFactory.attach(
-        process.env.CONTRACT_ADDRESS
+        process.env.CONTRACT_ADDRESS_GOERLI
     ); // STOP here! Wait for contract to deploy
     console.log("Here is the deployment transaction (transaction response): ")
 
@@ -74,7 +74,7 @@ function myLoop() {         //  create a loop function
                 process.exit(1)
             })//mycode
         i++;                    //  increment the counter
-        if (i < 100) {           //  if the counter < 10, call the loop function
+        if (i < 10) {           //  if the counter < 10, call the loop function
             myLoop();             //  ..  again which will trigger another 
         }                       //  ..  setTimeout()
     }, 5000)
