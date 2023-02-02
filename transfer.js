@@ -31,13 +31,17 @@ async function main() {
     console.log(result);
     console.log("new-------------");
 
-    const nonce = await wallet.getTransactionCount();
-    const tx = await contract.transfer({
-        value: ethers.utils.parseUnits("1000", "gwei"),
-        nonce: nonce //TODO nonce failure check it whether I can fix it with async somehow
-    });
-    console.log(tx);
+    /*     const nonce = await wallet.getTransactionCount();
+        const tx = await contract.transfer({
+            value: ethers.utils.parseUnits("1000", "gwei"),
+            nonce: nonce //TODO nonce failure check it whether I can fix it with async somehow
+        });
+        console.log(tx); */
 
+    const dataStorage = await contract.getArr();
+    console.log("Here ist the datastorage");
+    console.log(dataStorage);
+    console.log("new-------------");
 
     console.log("--------------test-----------------");
     jsonReader("./data.json", (err, data) => {
@@ -70,7 +74,7 @@ function myLoop() {         //  create a loop function
                 process.exit(1)
             })//mycode
         i++;                    //  increment the counter
-        if (i < 10) {           //  if the counter < 10, call the loop function
+        if (i < 100) {           //  if the counter < 10, call the loop function
             myLoop();             //  ..  again which will trigger another 
         }                       //  ..  setTimeout()
     }, 5000)
