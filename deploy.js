@@ -7,7 +7,7 @@ async function main() {
     //compile them in our code 
     //compile them separately 
     //http://0.0.0.0:7545
-    const provider = new ethers.providers.JsonRpcProvider(process.env.PROVIDER);
+    const provider = new ethers.providers.JsonRpcProvider(process.env.PROVIDER_LOCAL);
     const wallet = new ethers.Wallet(
         process.env.PRIVATE_KEY,
         provider
