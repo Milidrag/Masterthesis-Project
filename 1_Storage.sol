@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: GPL-3.0
+
+pragma solidity >=0.7.0 <0.9.0;
+
 contract Storage {
     DataStorage[] public data;
 
@@ -9,6 +13,10 @@ contract Storage {
     struct DataStorage {
         uint256 timeStamps;
         string data;
+    }
+
+    function getArr() public view returns (DataStorage[] memory) {
+        return data;
     }
 
     uint256 public timestamp;

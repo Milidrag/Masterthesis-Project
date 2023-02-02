@@ -33,7 +33,8 @@ async function main() {
 
     const nonce = await wallet.getTransactionCount();
     const tx = await contract.transfer({
-        value: ethers.utils.parseUnits("1", "ether")
+        value: ethers.utils.parseUnits("1000", "gwei"),
+        nonce: nonce //TODO nonce failure check it whether I can fix it with async somehow
     });
     console.log(tx);
 
@@ -72,7 +73,7 @@ function myLoop() {         //  create a loop function
         if (i < 10) {           //  if the counter < 10, call the loop function
             myLoop();             //  ..  again which will trigger another 
         }                       //  ..  setTimeout()
-    }, 2000)
+    }, 5000)
 }
 
 myLoop();                   //  start the loop
