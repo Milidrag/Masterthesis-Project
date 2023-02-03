@@ -1,7 +1,7 @@
-import { ethers } from "ethers";
-import fs from 'fs'
-import * as dotenv from 'dotenv' // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
-import { Network, Alchemy, Wallet, Utils } from "alchemy-sdk";
+const { Network, Alchemy, Wallet, Utils } = require("alchemy-sdk");
+const ethers = require("ethers");
+const fs = require("fs-extra");
+require('dotenv').config();
 
 
 
@@ -19,6 +19,9 @@ async function main() {
     const alchemy = new Alchemy(settings);
     const wallet = new Wallet(PRIVATE_KEY_GOERLI_BOB, alchemy);
 
+
+    const abi = fs.readFileSync("./1_Storage_sol_Storage.abi", "utf8");
+    const binary = fs.readFileSync("./1_Storage_sol_Storage.bin", "utf8");
 
     const contractFactory = new ethers.ContractFactory(abi, binary, wallet);
     const contract = await contractFactory.attach(
@@ -48,8 +51,9 @@ async function main() {
     const dataStorage = await contract.getArr();
     console.log("Here ist the datastorage");
     console.log(dataStorage);
-    console.log("------------2new2-------------");
+    console.log("new-------------");
 
+    console.log("--------------test-----------------");
     jsonReader("./data.json", (err, data) => {
         if (err) {
             console.log(err);
