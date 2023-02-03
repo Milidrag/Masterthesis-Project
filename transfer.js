@@ -1,26 +1,29 @@
-const ethers = require("ethers");
-const fs = require("fs-extra");
-require('dotenv').config();
+import { ethers } from "ethers";
+import fs from 'fs'
+import * as dotenv from 'dotenv' // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
+import { Network, Alchemy, Wallet, Utils } from "alchemy-sdk";
+
 
 
 async function main() {
     //compile them in our code 
     //compile them separately 
     //http://0.0.0.0:7545
-    const provider = new ethers.providers.JsonRpcProvider(process.env.PROVIDER_ALCHEMY);
-    const wallet = new ethers.Wallet(
-        process.env.PRIVATE_KEY_GOERLI_BOB,
-        provider
-    );
-    const abi = fs.readFileSync("./1_Storage_sol_Storage.abi", "utf8");
-    const binary = fs.readFileSync("./1_Storage_sol_Storage.bin", "utf8");
+
+    const { API_KEY, PRIVATE_KEY_GOERLI_BOB } = process.env;
+    const settings = {
+        apiKey: API_KEY,
+        network: Network.ETH_GOERLI, // Replace with your network.
+    };
+
+    const alchemy = new Alchemy(settings);
+    const wallet = new Wallet(PRIVATE_KEY_GOERLI_BOB, alchemy);
+
 
     const contractFactory = new ethers.ContractFactory(abi, binary, wallet);
-    console.log("Deploying, please wait...");
     const contract = await contractFactory.attach(
         process.env.CONTRACT_ADDRESS_GOERLI
-    ); // STOP here! Wait for contract to deploy
-    console.log("Here is the deployment transaction (transaction response): ")
+    );
 
     jsonString = fs.readFileSync("./data.json", "utf-8");
     jsonStringFirst = JSON.parse(jsonString)[0];
@@ -29,21 +32,24 @@ async function main() {
 
     const result = await contract.store(jsonStringFirst);
     console.log(result);
-    console.log("new-------------");
+    console.log("-------------new-------------");
 
-    const nonce = await wallet.getTransactionCount();
-    const tx = await contract.transfer({
-        value: ethers.utils.parseUnits("10000", "gwei"),
-        nonce: nonce //TODO nonce failure check it whether I can fix it with async somehow
-    });
-    console.log(tx);
+    const transaction = {
+        to: "0xa238b6008Bc2FBd9E386A5d4784511980cE504Cd",
+        nonce: await alchemy.core.getTransactionCount(wallet.getAddress()),
+        value: Utils.parseEther("0.001"),
+        maxPriorityFeePerGas: Utils.parseUnits("15", "wei"),
+        type: 2,
+        chainId: 5, // Corresponds to ETH_GOERLI
+    };
+
+    console.log(transaction);
 
     const dataStorage = await contract.getArr();
     console.log("Here ist the datastorage");
     console.log(dataStorage);
-    console.log("new-------------");
+    console.log("------------2new2-------------");
 
-    console.log("--------------test-----------------");
     jsonReader("./data.json", (err, data) => {
         if (err) {
             console.log(err);
