@@ -33,12 +33,41 @@ async function main() {
     console.log(jsonStringFirst);
 
 
-    const result = await contract.store(jsonStringFirst);
-    console.log(result);
-    console.log("-------------new-------------");
+    /*     const result = await contract.store(jsonStringFirst);
+        console.log(result);
+        console.log("-------------new-------------");
+    
+        const transaction = {
+            to: process.env.CONTRACT_ADDRESS_GOERLI,
+            data: "0x8a4068dd",
+            nonce: await alchemy.core.getTransactionCount(wallet.getAddress()),
+            value: Utils.parseEther("0.001"),
+            maxPriorityFeePerGas: Utils.parseUnits("150", "wei"),
+            type: 2,
+            chainId: 5, // Corresponds to ETH_GOERLI
+        };
+    
+    
+        const sentTx = await wallet.sendTransaction(transaction); 
+        
+        console.log(sentTx); 
+        */
+
+
+
+    /*     const tx = await contract.transfer({
+            value: Utils.parseEther("0.001"),
+            nonce: await alchemy.core.getTransactionCount(wallet.getAddress()),
+            maxPriorityFeePerGas: Utils.parseUnits("15", "wei"),
+            type: 2,
+            chainId: 5, // Corresponds to ETH_GOERLI
+        });
+    
+        console.log(tx);
+     */
 
     const transaction = {
-        to: "0xa238b6008Bc2FBd9E386A5d4784511980cE504Cd",
+        to: process.env.CONTRACT_ADDRESS_GOERLI,
         nonce: await alchemy.core.getTransactionCount(wallet.getAddress()),
         value: Utils.parseEther("0.001"),
         maxPriorityFeePerGas: Utils.parseUnits("15", "wei"),
@@ -46,12 +75,14 @@ async function main() {
         chainId: 5, // Corresponds to ETH_GOERLI
     };
 
-    console.log(transaction);
+    const sentTx = await wallet.sendTransaction(transaction);
+    console.log(sentTx);
 
-    const dataStorage = await contract.getArr();
-    console.log("Here ist the datastorage");
-    console.log(dataStorage);
-    console.log("new-------------");
+
+    /*    const dataStorage = await contract.getArr();
+       console.log("Here ist the datastorage");
+       console.log(dataStorage);
+       console.log("new-------------"); */
 
     console.log("--------------test-----------------");
     jsonReader("./data.json", (err, data) => {
