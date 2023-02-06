@@ -33,41 +33,13 @@ async function main() {
     console.log(jsonStringFirst);
 
 
-    /*     const result = await contract.store(jsonStringFirst);
-        console.log(result);
-        console.log("-------------new-------------");
-    
-        const transaction = {
-            to: process.env.CONTRACT_ADDRESS_GOERLI,
-            data: "0x8a4068dd",
-            nonce: await alchemy.core.getTransactionCount(wallet.getAddress()),
-            value: Utils.parseEther("0.001"),
-            maxPriorityFeePerGas: Utils.parseUnits("150", "wei"),
-            type: 2,
-            chainId: 5, // Corresponds to ETH_GOERLI
-        };
-    
-    
-        const sentTx = await wallet.sendTransaction(transaction); 
-        
-        console.log(sentTx); 
-        */
-
-
-
-    /*     const tx = await contract.transfer({
-            value: Utils.parseEther("0.001"),
-            nonce: await alchemy.core.getTransactionCount(wallet.getAddress()),
-            maxPriorityFeePerGas: Utils.parseUnits("15", "wei"),
-            type: 2,
-            chainId: 5, // Corresponds to ETH_GOERLI
-        });
-    
-        console.log(tx);
-     */
+    const result = await contract.store(jsonStringFirst);
+    console.log(result);
+    console.log("-------------new-------------");
 
     const transaction = {
-        to: process.env.CONTRACT_ADDRESS_GOERLI,
+        to: "0x1FaDaBd1e0783B3B19bd610B3263B5fdE5f4202B",
+        data: "0x8a4068dd",
         nonce: await alchemy.core.getTransactionCount(wallet.getAddress()),
         value: Utils.parseEther("0.001"),
         maxPriorityFeePerGas: Utils.parseUnits("15", "wei"),
@@ -79,10 +51,10 @@ async function main() {
     console.log(sentTx);
 
 
-    /*    const dataStorage = await contract.getArr();
-       console.log("Here ist the datastorage");
-       console.log(dataStorage);
-       console.log("new-------------"); */
+    const dataStorage = await contract.getArr();
+    console.log("Here ist the datastorage");
+    console.log(dataStorage);
+    console.log("new-------------");
 
     console.log("--------------test-----------------");
     jsonReader("./data.json", (err, data) => {
