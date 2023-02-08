@@ -33,7 +33,7 @@ async function main() {
 
 
     const result = await contract.store(jsonStringFirst);
-
+    //IPFS
 
     const transaction = {
         to: "0x1FaDaBd1e0783B3B19bd610B3263B5fdE5f4202B",
