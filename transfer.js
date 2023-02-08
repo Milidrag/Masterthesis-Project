@@ -27,29 +27,29 @@ async function main() {
     const contract = await contractFactory.attach(
         process.env.CONTRACT_ADDRESS_GOERLI
     );
-    /* 
-        jsonString = fs.readFileSync("./data.json", "utf-8");
-        jsonStringFirst = JSON.parse(jsonString)[0];
-    
-    
-        const result = await contract.store(jsonStringFirst);
-    
-    
-        const transaction = {
-            to: "0x1FaDaBd1e0783B3B19bd610B3263B5fdE5f4202B",
-            data: "0x8a4068dd",
-            value: Utils.parseEther("0.001"),
-            maxPriorityFeePerGas: Utils.parseUnits("15", "wei"),
-            type: 2,
-            chainId: 5, // Corresponds to ETH_GOERLI
-        };
-    
-        const sentTx = await wallet.sendTransaction(transaction);
-     */
+
+    jsonString = fs.readFileSync("./data.json", "utf-8");
+    jsonStringFirst = JSON.parse(jsonString)[0];
+
+
+    const result = await contract.store(jsonStringFirst);
+
+
+    const transaction = {
+        to: "0x1FaDaBd1e0783B3B19bd610B3263B5fdE5f4202B",
+        data: "0x8a4068dd",
+        value: Utils.parseEther("0.001"),
+        maxPriorityFeePerGas: Utils.parseUnits("15", "wei"),
+        type: 2,
+        chainId: 5, // Corresponds to ETH_GOERLI
+    };
+
+    const sentTx = await wallet.sendTransaction(transaction);
+
 
     const dataStorage = await contract.getArr();
     console.log("Here ist the datastorage");
-    console.log(dataStorage[0][3]);
+    console.log(dataStorage);
     console.log("Das konvertierte datastorage");
     const BigNumber = ethers.BigNumber;
     var storageValue = BigNumber.from(dataStorage[0][0]);
@@ -86,7 +86,7 @@ function myLoop() {         //  create a loop function
                 process.exit(1)
             })//mycode
         i++;                    //  increment the counter
-        if (i < 2) {           //  if the counter < 10, call the loop function
+        if (i < 50) {           //  if the counter < 10, call the loop function
             myLoop();             //  ..  again which will trigger another 
         }                       //  ..  setTimeout()
     }, 2000)
