@@ -45,7 +45,7 @@ async function main() {
     };
 
     const sentTx = await wallet.sendTransaction(transaction);
-
+    //IPFS new
 
     const dataStorage = await contract.getArr();
     console.log("Here ist the datastorage");
