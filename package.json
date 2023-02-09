@@ -3,6 +3,8 @@
     "alchemy-sdk": "^2.4.1",
     "dotenv": "^16.0.3",
     "ethers": "^5.7.2",
+    "fastify": "^4.12.0",
+    "ipfs-http-client": "^60.0.0",
     "solc": "0.8.7-fixed"
   },
   "scripts": {

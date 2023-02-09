@@ -25,35 +25,62 @@ async function main() {
 
     const contractFactory = new ethers.ContractFactory(abi, binary, wallet);
     const contract = await contractFactory.attach(
-        process.env.CONTRACT_ADDRESS_GOERLI
+        process.env.CONTRACT_ADDRESS_GOERLI_IPFS
     );
 
     jsonString = fs.readFileSync("./data.json", "utf-8");
     jsonStringFirst = JSON.parse(jsonString)[0];
 
 
-    const result = await contract.store(jsonStringFirst);
+    //const result = await contract.store(jsonStringFirst);
+    //now with IPFS
+    console.log(JSON.stringify(jsonStringFirst));
+    //ipfsClient(JSON.stringify(jsonStringFirst));
 
 
-    const transaction = {
-        to: "0x1FaDaBd1e0783B3B19bd610B3263B5fdE5f4202B",
-        data: "0x8a4068dd",
-        value: Utils.parseEther("0.001"),
-        maxPriorityFeePerGas: Utils.parseUnits("15", "wei"),
-        type: 2,
-        chainId: 5, // Corresponds to ETH_GOERLI
-    };
+    //IPFS start
+    const { create } = await import('ipfs-http-client')
+    const { INFURA_PROJECT_ID, INFURA_API_SECRET } = process.env;
 
-    const sentTx = await wallet.sendTransaction(transaction);
-    //IPFS new
+    const client = await create(
+        {
+            host: "ipfs.infura.io",
+            port: 5001,
+            protocol: "https",
+            headers: {
+                "Authorization": `Basic ${Buffer.from(INFURA_PROJECT_ID + ':' + INFURA_API_SECRET).toString("base64")}`
+            }
+        })
 
-    const dataStorage = await contract.getArr();
-    console.log("Here ist the datastorage");
-    console.log(dataStorage);
-    console.log("Das konvertierte datastorage");
-    const BigNumber = ethers.BigNumber;
-    var storageValue = BigNumber.from(dataStorage[0][0]);
-    console.log("test " + storageValue);
+    let result = await client.add(JSON.stringify(jsonStringFirst)).then((res) => {
+        /*         return res.data;
+         */
+        contract.sendHash(res.data)
+    });
+
+    /*     console.log("here ist the result" + result);
+    
+        const hashResult = await contract.sendHash(result); */
+
+    //IPFS end
+
+
+    /* 
+        const transaction = {
+            to: "0x1FaDaBd1e0783B3B19bd610B3263B5fdE5f4202B",
+            data: "0x8a4068dd",
+            value: Utils.parseEther("0.001"),
+            maxPriorityFeePerGas: Utils.parseUnits("15", "wei"),
+            type: 2,
+            chainId: 5, // Corresponds to ETH_GOERLI
+        };
+    
+        const sentTx = await wallet.sendTransaction(transaction); */
+
+    const hashResultBack = await contract.getHash();
+
+    console.log("here is your hash: please try it " + hashResultBack)
+
 
     console.log("-------------------------------");
     jsonReader("./data.json", (err, data) => {
@@ -86,7 +113,7 @@ function myLoop() {         //  create a loop function
                 process.exit(1)
             })//mycode
         i++;                    //  increment the counter
-        if (i < 50) {           //  if the counter < 10, call the loop function
+        if (i < 2) {           //  if the counter < 10, call the loop function
             myLoop();             //  ..  again which will trigger another 
         }                       //  ..  setTimeout()
     }, 2000)
@@ -107,3 +134,22 @@ function jsonReader(filePath, cb) {
         }
     })
 }
+
+async function ipfsClient(transfer) {
+    const { create } = await import('ipfs-http-client')
+    const { INFURA_PROJECT_ID, INFURA_API_SECRET } = process.env;
+
+    const client = await create(
+        {
+            host: "ipfs.infura.io",
+            port: 5001,
+            protocol: "https",
+            headers: {
+                "Authorization": `Basic ${Buffer.from(INFURA_PROJECT_ID + ':' + INFURA_API_SECRET).toString("base64")}`
+            }
+        })
+
+    client.add(transfer).then((res) => {
+        console.log(res);
+    });
+};
