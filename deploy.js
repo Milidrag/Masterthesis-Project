@@ -7,9 +7,9 @@ async function main() {
     //compile them in our code 
     //compile them separately 
     //http://0.0.0.0:7545
-    const provider = new ethers.providers.JsonRpcProvider(process.env.PROVIDER_LOCAL);
+    const provider = new ethers.providers.JsonRpcProvider(process.env.PROVIDER_GANACHE);
     const wallet = new ethers.Wallet(
-        process.env.PRIVATE_KEY,
+        process.env.PRIVATE_KEY_GANACHE_BOB,
         provider
     );
     const abi = fs.readFileSync("./1_Storage_sol_Storage.abi", "utf8");
@@ -20,6 +20,7 @@ async function main() {
     const contract = await contractFactory.deploy(); // STOP here! Wait for contract to deploy
     const transactionReceipt = await contract.deployTransaction.wait(1);
     console.log("Here is the deployment transaction (transaction response): " + transactionReceipt);
+    console.log("Here is the contract address: " + contract.address);
 
 }
 

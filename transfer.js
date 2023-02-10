@@ -1,40 +1,36 @@
-const ethers = require("ethers");
-const fs = require("fs-extra");
-require('dotenv').config();
+const ethers = require("ethers");  //use ether library to interact with the BC
+const fs = require("fs-extra");    //fs-extra package is a library to interact with the local file storage
+require('dotenv').config();        //dotenv package is used to hide private data on public repository. the ".env"-file is not committed on the repository
 
-
+//async functions are needed to use the await function
 async function main() {
-    //compile them in our code 
-    //compile them separately 
-    //http://0.0.0.0:7545
-    const provider = new ethers.providers.JsonRpcProvider(process.env.PROVIDER_LOCAL);
-    const wallet = new ethers.Wallet(
-        process.env.PRIVATE_KEY,
+    const provider = new ethers.providers.JsonRpcProvider(process.env.PROVIDER_GANACHE); //provider is the host with the port
+    const wallet = new ethers.Wallet(                                                    //wallet object contains the PK and the provider
+        process.env.PRIVATE_KEY_GANACHE_BOB,
         provider
     );
-    const abi = fs.readFileSync("./1_Storage_sol_Storage.abi", "utf8");
-    const binary = fs.readFileSync("./1_Storage_sol_Storage.bin", "utf8");
+    const abi = fs.readFileSync("./1_Storage_sol_Storage.abi", "utf8");                //ABI is the abstraction of the contract
+    const binary = fs.readFileSync("./1_Storage_sol_Storage.bin", "utf8");             //binary file of the contract
 
-    const contractFactory = new ethers.ContractFactory(abi, binary, wallet);
-    console.log("Deploying, please wait...");
-    const contract = await contractFactory.attach(
-        process.env.CONTRACT_ADDRESS
-    ); // STOP here! Wait for contract to deploy
-    console.log("Here is the deployment transaction (transaction response): ")
+    const contractFactory = new ethers.ContractFactory(abi, binary, wallet);           //contractFactory can be deployment or for connection to a contract
+    console.log("Attaching, please wait...");
+    const contract = await contractFactory.attach(                                     //here the contract object is attached to contract address 
+        process.env.CONTRACT_ADDRESS_GANACHE
+    );
 
-    jsonString = fs.readFileSync("./data.json", "utf-8");
-    jsonStringFirst = JSON.parse(jsonString)[0];
-    console.log(jsonStringFirst);
+    jsonString = fs.readFileSync("./data.json", "utf-8");                              //reading from the local FS
+    jsonStringFirst = JSON.parse(jsonString)[0];                                       //take the first value
+    console.log("This value will be stored on the BC " + jsonStringFirst);
+    const options = { nonce: await provider.getTransactionCount(process.env.PUBLIC_KEY_GANACHE_BOB) };
+    const result = await contract.store(jsonStringFirst, options);                              //store the value on the BC
+    console.log(result);                                                               //log the result 
 
-
-    const result = await contract.store(jsonStringFirst);
-    console.log(result);
-    console.log("new-------------");
-
-    const tx = await contract.transfer({
-        value: ethers.utils.parseUnits("1000", "gwei"),
-    });
-    console.log(tx);
+    /*     console.log("This is the transaction: ");
+        const tx = await contract.transfer({
+            value: ethers.utils.parseUnits("1", "ether"),
+            nonce: await provider.getTransactionCount(process.env.PUBLIC_KEY_GANACHE_BOB)
+        });
+        console.log(tx); */
 
 
     console.log("--------------test-----------------");
@@ -68,10 +64,10 @@ function myLoop() {         //  create a loop function
                 process.exit(1)
             })//mycode
         i++;                    //  increment the counter
-        if (i < 10) {           //  if the counter < 10, call the loop function
+        if (i < 5) {           //  if the counter < 10, call the loop function
             myLoop();             //  ..  again which will trigger another 
         }                       //  ..  setTimeout()
-    }, 5000)
+    }, 2000)
 }
 
 myLoop();                   //  start the loop
