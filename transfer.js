@@ -33,27 +33,26 @@ async function main() {
 
 
     const result = await contract.store(jsonStringFirst);
-    //IPFS
 
-    const transaction = {
-        to: "0x1FaDaBd1e0783B3B19bd610B3263B5fdE5f4202B",
-        data: "0x8a4068dd",
-        value: Utils.parseEther("0.001"),
-        maxPriorityFeePerGas: Utils.parseUnits("15", "wei"),
-        type: 2,
-        chainId: 5, // Corresponds to ETH_GOERLI
-    };
+    /*     const transaction = {
+            to: "0x1FaDaBd1e0783B3B19bd610B3263B5fdE5f4202B",
+            data: "0x8a4068dd",
+            value: Utils.parseEther("0.001"),
+            maxPriorityFeePerGas: Utils.parseUnits("15", "wei"),
+            type: 2,
+            chainId: 5, // Corresponds to ETH_GOERLI
+        };
+    
+        const sentTx = await wallet.sendTransaction(transaction); */
 
-    const sentTx = await wallet.sendTransaction(transaction);
 
-
-    const dataStorage = await contract.getArr();
-    console.log("Here ist the datastorage");
-    console.log(dataStorage);
-    console.log("Das konvertierte datastorage");
-    const BigNumber = ethers.BigNumber;
-    var storageValue = BigNumber.from(dataStorage[0][0]);
-    console.log("test " + storageValue);
+    /*     const dataStorage = await contract.getArr();
+        console.log("Here ist the datastorage");
+        console.log(dataStorage);
+        console.log("Das konvertierte datastorage");
+        const BigNumber = ethers.BigNumber;
+        var storageValue = BigNumber.from(dataStorage[0][0]);
+        console.log("test " + storageValue); */
 
     console.log("-------------------------------");
     jsonReader("./data.json", (err, data) => {
@@ -86,7 +85,7 @@ function myLoop() {         //  create a loop function
                 process.exit(1)
             })//mycode
         i++;                    //  increment the counter
-        if (i < 50) {           //  if the counter < 10, call the loop function
+        if (i < 2) {           //  if the counter < 10, call the loop function
             myLoop();             //  ..  again which will trigger another 
         }                       //  ..  setTimeout()
     }, 2000)

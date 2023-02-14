@@ -1,0 +1,24 @@
+Initial: 
+Görli Contract Adresse: 11b681f0EC71530Ef86B04670b2Ee084a1e5809D
+Bob Kontostand: 0.267956232990660342  ETH
+
+EINFACH bedeutet dass jsonStringFirst in die Store-Funktion geschoben wird 
+SCHWIERIG bedeutet dass jsonString in die Store-Funktion geschoben wird 
+--------------------------------------------------
+Test 1: Store Funktion Aufruf EINFACH
+
+Bob Kontostand NEU: 0.267824951820383118  ETH
+
+Bob wurden abgezogen: 0.00013128117
+--------------------------------------------------
+Test 2: Store Funktoin Aufruf SCHWIERIG
+
+Bob Kontostand NEU: 0.198725177918127042  ETH
+
+Bob wurden abgezogen: 0.0690997739
+--------------------------------------------------
+Test 3: Store Funktoin Aufruf EINFACH
+
+Bob Kontostand NEU: 0.198501900926842602 ETH
+
+Bob wurden abgezogen: 0.00022327699 ETH
