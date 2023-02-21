@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@iota/client": "^3.0.0-rc.5",
     "alchemy-sdk": "^2.4.1",
     "dotenv": "^16.0.3",
     "ethers": "^5.7.2",

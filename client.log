@@ -1,0 +1,24 @@
+2023-02-21 15:08:53 (UTC) iota_client::node_manager::syncing         [94mDEBUG[0m sync_nodes
+2023-02-21 15:08:53 (UTC) reqwest::connect                           [94mDEBUG[0m starting new connection: https://api.testnet.shimmer.network/
+2023-02-21 15:08:53 (UTC) rustls::client::hs                         [94mDEBUG[0m No cached session for DnsName(DnsName(DnsName("api.testnet.shimmer.network")))
+2023-02-21 15:08:53 (UTC) rustls::client::hs                         [94mDEBUG[0m Not resuming any session
+2023-02-21 15:08:53 (UTC) rustls::client::hs                         [94mDEBUG[0m Using ciphersuite TLS13_AES_256_GCM_SHA384
+2023-02-21 15:08:53 (UTC) rustls::client::tls13                      [94mDEBUG[0m Not resuming
+2023-02-21 15:08:53 (UTC) rustls::client::tls13                      [94mDEBUG[0m TLS1.3 encrypted extensions: [ServerNameAck, Protocols([6832])]
+2023-02-21 15:08:53 (UTC) rustls::client::hs                         [94mDEBUG[0m ALPN protocol is Some(b"h2")
+2023-02-21 15:08:53 (UTC) rustls::client::tls13                      [94mDEBUG[0m Ticket saved
+2023-02-21 15:08:53 (UTC) rustls::client::tls13                      [94mDEBUG[0m Ticket saved
+2023-02-21 15:08:53 (UTC) iota_client::node_manager::http_client     [94mDEBUG[0m GET: 327 ms for 200 OK https://api.testnet.shimmer.network/api/core/v2/info
+2023-02-21 15:08:53 (UTC) rustls::conn                               [94mDEBUG[0m Sending warning alert CloseNotify
+2023-02-21 15:08:53 (UTC) iota_client::message_interface::message_handler [94mDEBUG[0m Message: GetInfo
+2023-02-21 15:08:53 (UTC) reqwest::connect                           [94mDEBUG[0m starting new connection: https://api.testnet.shimmer.network/
+2023-02-21 15:08:53 (UTC) rustls::client::hs                         [94mDEBUG[0m No cached session for DnsName(DnsName(DnsName("api.testnet.shimmer.network")))
+2023-02-21 15:08:53 (UTC) rustls::client::hs                         [94mDEBUG[0m Not resuming any session
+2023-02-21 15:08:53 (UTC) rustls::client::hs                         [94mDEBUG[0m Using ciphersuite TLS13_AES_256_GCM_SHA384
+2023-02-21 15:08:53 (UTC) rustls::client::tls13                      [94mDEBUG[0m Not resuming
+2023-02-21 15:08:53 (UTC) rustls::client::tls13                      [94mDEBUG[0m TLS1.3 encrypted extensions: [ServerNameAck, Protocols([6832])]
+2023-02-21 15:08:53 (UTC) rustls::client::hs                         [94mDEBUG[0m ALPN protocol is Some(b"h2")
+2023-02-21 15:08:53 (UTC) rustls::client::tls13                      [94mDEBUG[0m Ticket saved
+2023-02-21 15:08:53 (UTC) rustls::client::tls13                      [94mDEBUG[0m Ticket saved
+2023-02-21 15:08:53 (UTC) iota_client::node_manager::http_client     [94mDEBUG[0m GET: 187 ms for 200 OK https://api.testnet.shimmer.network/api/core/v2/info
+2023-02-21 15:08:53 (UTC) iota_client::message_interface::message_handler [94mDEBUG[0m Response: Info(NodeInfoWrapper { node_info: InfoResponse { name: "HORNET", version: "2.0.0-rc.4", status: StatusResponse { is_healthy: true, latest_milestone: LatestMilestoneResponse { index: 3770948, timestamp: Some(1676992130), milestone_id: Some("0x20d8a5a4e348f92684611a475044fb0066d051867deee73e222da9ebbd6817fd") }, confirmed_milestone: ConfirmedMilestoneResponse { index: 3770948, timestamp: Some(1676992130), milestone_id: Some("0x20d8a5a4e348f92684611a475044fb0066d051867deee73e222da9ebbd6817fd") }, pruning_index: 1435207 }, supported_protocol_versions: [2], protocol: ProtocolParametersDto { protocol_version: 2, network_name: "testnet", bech32_hrp: "rms", min_pow_score: 1500, below_max_depth: 15, rent_structure: RentStructureDto { v_byte_cost: 100, v_byte_factor_key: 10, v_byte_factor_data: 1 }, token_supply: "1450896407249092" }, pending_protocol_parameters: [], base_token: BaseTokenResponse { name: "Shimmer", ticker_symbol: "SMR", unit: "SMR", subunit: Some("glow"), decimals: 6, use_metric_prefix: false }, metrics: MetricsResponse { blocks_per_second: 1.8, referenced_blocks_per_second: 2.4, referenced_rate: 133.33333333333331 }, features: [] }, url: "https://api.testnet.shimmer.network" })
