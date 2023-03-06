@@ -7,6 +7,7 @@
 const { ethers } = require("hardhat");
 const hre = require("hardhat");
 
+
 async function main() {
 
     const SimpleStorage = await ethers.getContractFactory("Storage");
@@ -23,9 +24,37 @@ async function main() {
 
 }
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
-main().catch((error) => {
-    console.error(error);
-    process.exitCode = 1;
-});
+
+
+var i = 1;                  //  set your counter to 1
+
+function myLoop() {         //  create a loop function
+    setTimeout(function () {   //  call a 3s setTimeout when the loop is called
+        main()
+            .then(() => console.log("hello"))
+            .catch((error) => {
+                console.error(error)
+                process.exit(1)
+            })//mycode
+        i++;                    //  increment the counter
+        if (i < 5) {           //  if the counter < 10, call the loop function
+            myLoop();             //  ..  again which will trigger another 
+        }                       //  ..  setTimeout()
+    }, 2000)
+}
+
+myLoop();                   //  start the loop
+
+function jsonReader(filePath, cb) {
+    fs.readFile(filePath, "utf-8", (err, fileData) => {
+        if (err) {
+            return cb && cb(err);
+        }
+        try {
+            const object = JSON.parse(fileData);
+            return cb && cb(null, object);
+        } catch (err) {
+            return cb && cb(err);
+        }
+    })
+}
