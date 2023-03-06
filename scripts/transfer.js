@@ -8,16 +8,24 @@ const { ethers } = require("hardhat");
 const hre = require("hardhat");
 
 async function main() {
-  const SimpleStorageFactory = await ethers.getContractFactory("Storage")
-  console.log("Deploying contract...")
-  const simpleStorage = await SimpleStorageFactory.deploy()
-  await simpleStorage.deployed()
-  console.log(`Deployed contract to: ${simpleStorage.address}`)
+
+    const SimpleStorage = await ethers.getContractFactory("Storage");
+    const contract = await SimpleStorage.attach(
+        "0x2fba9ff0D2a46Be7bC3869f8b2143269364598bD" // The deployed contract address
+    );
+
+    // Now you can call functions of the contract
+    result = await contract.transfer({
+        value: ethers.utils.parseUnits("1", "ether")
+    });
+
+    console.log(result);
+
 }
 
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.
 main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
+    console.error(error);
+    process.exitCode = 1;
 });
