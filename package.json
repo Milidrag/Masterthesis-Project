@@ -1,12 +1,27 @@
 {
-  "dependencies": {
-    "@iota/client": "^3.0.0-rc.5",
-    "alchemy-sdk": "^2.4.1",
-    "dotenv": "^16.0.3",
-    "ethers": "^5.7.2",
-    "solc": "0.8.7-fixed"
-  },
-  "scripts": {
-    "compile": "yarn solcjs --bin --abi --inlcude-path node_modules/ --base-path . -o . 1_Storage.sol"
+  "name": "Masterthesis-Project",
+  "version": "1.0.0",
+  "description": "\"Prototype for Masterthesis-Project\"",
+  "main": "index.js",
+  "repository": "https://github.com/Milidrag/Masterthesis-Project.git",
+  "author": "Milidrag <m-ivkic@gmx.at>",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "@ethersproject/abi": "^5.4.7",
+    "@ethersproject/providers": "^5.4.7",
+    "@nomicfoundation/hardhat-chai-matchers": "^1.0.0",
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.0",
+    "@nomicfoundation/hardhat-toolbox": "^2.0.0",
+    "@nomiclabs/hardhat-ethers": "^2.0.0",
+    "@nomiclabs/hardhat-etherscan": "^3.0.0",
+    "@typechain/ethers-v5": "^10.1.0",
+    "@typechain/hardhat": "^6.1.2",
+    "chai": "^4.2.0",
+    "ethers": "^5.4.7",
+    "hardhat": "^2.13.0",
+    "hardhat-gas-reporter": "^1.0.8",
+    "solidity-coverage": "^0.8.0",
+    "typechain": "^8.1.0"
   }
 }
