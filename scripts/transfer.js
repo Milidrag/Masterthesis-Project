@@ -12,7 +12,7 @@ async function main() {
 
     const SimpleStorage = await ethers.getContractFactory("Storage");
     const contract = await SimpleStorage.attach(
-        "0x2fba9ff0D2a46Be7bC3869f8b2143269364598bD" // The deployed contract address
+        "0x3c1638Da06b7F1d92e0a45dc36E3D2006AA66bb3" // The deployed contract address
     );
 
     // Now you can call functions of the contract
@@ -21,6 +21,10 @@ async function main() {
     });
 
     console.log(result);
+
+
+    const result = await contract.store(jsonStringFirst);
+
 
 }
 
