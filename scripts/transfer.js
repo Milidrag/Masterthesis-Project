@@ -6,7 +6,8 @@
 // global scope, and execute the script.
 const { ethers } = require("hardhat");
 const hre = require("hardhat");
-
+const fs = require("fs-extra");    //fs-extra package is a library to interact with the local file storage
+require('dotenv').config();        //dotenv package is used to hide private data on public repository. the ".env"-file is not committed on the repository
 
 async function main() {
 
@@ -24,9 +25,10 @@ async function main() {
 
     jsonString = fs.readFileSync("./data.json", "utf-8");                              //reading from the local FS
     jsonStringFirst = JSON.parse(jsonString)[0];                                       //take the first value
+    console.log(jsonStringFirst);
     console.log("This value will be stored on the BC " + jsonStringFirst);
     const resultStore = await contract.store(jsonStringFirst);
-    console.log(result);                                                               //log the result 
+    console.log(resultStore);                                                               //log the result 
 }
 
 
