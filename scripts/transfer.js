@@ -10,7 +10,7 @@ const fs = require("fs-extra");    //fs-extra package is a library to interact w
 require('dotenv').config();        //dotenv package is used to hide private data on public repository. the ".env"-file is not committed on the repository
 
 async function main() {
-
+    //TODO when the network runs again start measuring the gas output with growing input to the store function 
     const SimpleStorage = await ethers.getContractFactory("Storage");
     const contract = await SimpleStorage.attach(
         "0x3c1638Da06b7F1d92e0a45dc36E3D2006AA66bb3" // The deployed contract address
