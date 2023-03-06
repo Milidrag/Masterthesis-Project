@@ -26,9 +26,25 @@ async function main() {
     jsonString = fs.readFileSync("./data.json", "utf-8");                              //reading from the local FS
     jsonStringFirst = JSON.parse(jsonString)[0];                                       //take the first value
     console.log(jsonStringFirst);
+
     console.log("This value will be stored on the BC " + jsonStringFirst);
     const resultStore = await contract.store(jsonStringFirst);
     console.log(resultStore);                                                               //log the result 
+
+    jsonReader("./data.json", (err, data) => {
+        if (err) {
+            console.log(err);
+        } else {
+            data.shift();
+            fs.writeFile("./data.json", JSON.stringify(data, null, 2), err => {
+                if (err) {
+                    console.log(err)
+                }
+            })
+
+        }
+    });
+
 }
 
 
