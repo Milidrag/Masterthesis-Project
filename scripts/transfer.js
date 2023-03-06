@@ -14,18 +14,19 @@ async function main() {
     const contract = await SimpleStorage.attach(
         "0x3c1638Da06b7F1d92e0a45dc36E3D2006AA66bb3" // The deployed contract address
     );
+    /* 
+        // Now you can call functions of the contract
+        result = await contract.transfer({
+            value: ethers.utils.parseUnits("1", "ether")
+        });
+    
+        console.log(result); */
 
-    // Now you can call functions of the contract
-    result = await contract.transfer({
-        value: ethers.utils.parseUnits("1", "ether")
-    });
-
-    console.log(result);
-
-
-    const result = await contract.store(jsonStringFirst);
-
-
+    jsonString = fs.readFileSync("./data.json", "utf-8");                              //reading from the local FS
+    jsonStringFirst = JSON.parse(jsonString)[0];                                       //take the first value
+    console.log("This value will be stored on the BC " + jsonStringFirst);
+    const resultStore = await contract.store(jsonStringFirst);
+    console.log(result);                                                               //log the result 
 }
 
 
