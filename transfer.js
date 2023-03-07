@@ -3,27 +3,29 @@ const fs = require("fs-extra");    //fs-extra package is a library to interact w
 require('dotenv').config();        //dotenv package is used to hide private data on public repository. the ".env"-file is not committed on the repository
 
 //async functions are needed to use the await function
-async function main() {
-    const provider = new ethers.providers.JsonRpcProvider(process.env.PROVIDER_GANACHE); //provider is the host with the port
-    const wallet = new ethers.Wallet(                                                    //wallet object contains the PK and the provider
-        process.env.PRIVATE_KEY_GANACHE_BOB,
-        provider
-    );
-    const abi = fs.readFileSync("./1_Storage_sol_Storage.abi", "utf8");                //ABI is the abstraction of the contract
-    const binary = fs.readFileSync("./1_Storage_sol_Storage.bin", "utf8");             //binary file of the contract
+async function main(contract) {
 
-    const contractFactory = new ethers.ContractFactory(abi, binary, wallet);           //contractFactory can be deployment or for connection to a contract
-    console.log("Attaching, please wait...");
-    const contract = await contractFactory.attach(                                     //here the contract object is attached to contract address 
-        process.env.CONTRACT_ADDRESS_GANACHE
-    );
 
     jsonString = fs.readFileSync("./data.json", "utf-8");                              //reading from the local FS
     jsonStringFirst = JSON.parse(jsonString)[0];                                       //take the first value
-    console.log("This value will be stored on the BC " + jsonStringFirst);
-    const options = { nonce: await provider.getTransactionCount(process.env.PUBLIC_KEY_GANACHE_BOB) };
-    const result = await contract.store(jsonStringFirst, options);                              //store the value on the BC
-    console.log(result);                                                               //log the result 
+    console.log("This value will be stored on the BC ");
+    console.log(jsonStringFirst)
+    const start = Date.now();
+    const provider = new ethers.providers.JsonRpcProvider(process.env.PROVIDER_GANACHE); //provider is the host with the port
+
+    //  const options = { nonce: await provider.getTransactionCount(process.env.PUBLIC_KEY_GANACHE_BOB), gas: 35000000, gasPrice: 3000000000 };
+
+    let result = await contract.store(jsonStringFirst, {
+        gasPrice: 1000,
+        gasLimit: 900000
+    });                              //store the value on the BC
+    const end = Date.now()
+    const duration = end - start;
+    console.log(duration)
+    console.log("--------------------");
+    /*     console.log(result)
+        console.log(ethers.utils.formatEther(result.gasPrice))
+        console.log(ethers.utils.formatEther(result.gasLimit)) */
 
     /*     console.log("This is the transaction: ");
         const tx = await contract.transfer({
@@ -32,8 +34,6 @@ async function main() {
         });
         console.log(tx); */
 
-
-    console.log("--------------test-----------------");
     jsonReader("./data.json", (err, data) => {
         if (err) {
             console.log(err);
@@ -53,24 +53,47 @@ async function main() {
 
 
 
-var i = 1;                  //  set your counter to 1
+async function attach() {
+    const provider = new ethers.providers.JsonRpcProvider(process.env.PROVIDER_GANACHE); //provider is the host with the port
+    const wallet = new ethers.Wallet(                                                    //wallet object contains the PK and the provider
+        process.env.PRIVATE_KEY_GANACHE_BOB,
+        provider
+    );
+    const abi = fs.readFileSync("./1_Storage_sol_Storage.abi", "utf8");                //ABI is the abstraction of the contract
+    const binary = fs.readFileSync("./1_Storage_sol_Storage.bin", "utf8");             //binary file of the contract
 
-function myLoop() {         //  create a loop function
+    const contractFactory = new ethers.ContractFactory(abi, binary, wallet);           //contractFactory can be deployment or for connection to a contract
+    console.log("Attaching, please wait...");
+    const contract = await contractFactory.attach(                                     //here the contract object is attached to contract address 
+        process.env.CONTRACT_ADDRESS_GANACHE
+    );
+
+    return contract;
+}
+
+var i = 1;                  //  set your counter to 1
+function myLoop(contract) {         //  create a loop function
     setTimeout(function () {   //  call a 3s setTimeout when the loop is called
-        main()
-            .then(() => console.log("hello"))
+        main(contract)
+            .then(() => console.log(""))
             .catch((error) => {
                 console.error(error)
                 process.exit(1)
             })//mycode
         i++;                    //  increment the counter
         if (i < 5) {           //  if the counter < 10, call the loop function
-            myLoop();             //  ..  again which will trigger another 
+            myLoop(contract);             //  ..  again which will trigger another 
         }                       //  ..  setTimeout()
-    }, 2000)
+    }, 400)
 }
 
-myLoop();                   //  start the loop
+const promise1 = Promise.resolve(attach())
+promise1.then((contract) => {
+    myLoop(contract)
+});
+
+
+/* myLoop();     */               //  start the loop
 
 function jsonReader(filePath, cb) {
     fs.readFile(filePath, "utf-8", (err, fileData) => {
