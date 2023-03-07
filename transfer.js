@@ -10,29 +10,37 @@ async function main(contract) {
     jsonStringFirst = JSON.parse(jsonString)[0];                                       //take the first value
     console.log("This value will be stored on the BC ");
     console.log(jsonStringFirst)
-    const start = Date.now();
     const provider = new ethers.providers.JsonRpcProvider(process.env.PROVIDER_GANACHE); //provider is the host with the port
 
     //  const options = { nonce: await provider.getTransactionCount(process.env.PUBLIC_KEY_GANACHE_BOB), gas: 35000000, gasPrice: 3000000000 };
+    const start = Date.now();
 
-    let result = await contract.store(jsonStringFirst, {
+    await contract.store(jsonStringFirst, {
         gasPrice: 1000,
         gasLimit: 900000
     });                              //store the value on the BC
     const end = Date.now()
     const duration = end - start;
+    console.log("This is the duration of the store function");
     console.log(duration)
     console.log("--------------------");
     /*     console.log(result)
         console.log(ethers.utils.formatEther(result.gasPrice))
         console.log(ethers.utils.formatEther(result.gasLimit)) */
 
-    /*     console.log("This is the transaction: ");
-        const tx = await contract.transfer({
-            value: ethers.utils.parseUnits("1", "ether"),
-            nonce: await provider.getTransactionCount(process.env.PUBLIC_KEY_GANACHE_BOB)
-        });
-        console.log(tx); */
+    console.log("This is the transaction: ");
+    const start2 = Date.now();
+
+    await contract.transfer({
+        value: ethers.utils.parseUnits("1", "ether"),
+/*         nonce: await provider.getTransactionCount(process.env.PUBLIC_KEY_GANACHE_BOB)
+ */    });
+    const end2 = Date.now()
+    const duration2 = end2 - start2;
+    console.log("This is the duration of the transfer function");
+    console.log(duration2)
+    console.log("--------------------");
+    console.log("--------------------");
 
     jsonReader("./data.json", (err, data) => {
         if (err) {
@@ -81,10 +89,10 @@ function myLoop(contract) {         //  create a loop function
                 process.exit(1)
             })//mycode
         i++;                    //  increment the counter
-        if (i < 5) {           //  if the counter < 10, call the loop function
+        if (i < 20) {           //  if the counter < 10, call the loop function
             myLoop(contract);             //  ..  again which will trigger another 
         }                       //  ..  setTimeout()
-    }, 400)
+    }, 5000)
 }
 
 const promise1 = Promise.resolve(attach())
