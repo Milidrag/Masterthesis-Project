@@ -10,53 +10,36 @@ async function main(contract) {
     jsonStringFirst = JSON.parse(jsonString)[0];                                       //take the first value
     console.log("This value will be stored on the BC ");
     console.log(jsonStringFirst)
-    const provider = new ethers.providers.JsonRpcProvider(process.env.PROVIDER_GANACHE); //provider is the host with the port
-
-    //  const options = { nonce: await provider.getTransactionCount(process.env.PUBLIC_KEY_GANACHE_BOB), gas: 35000000, gasPrice: 3000000000 };
-    const start = Date.now();
-
+    const startStore = Date.now();
     await contract.store(jsonStringFirst, {
         gasPrice: 1000,
         gasLimit: 900000
     });                              //store the value on the BC
-    const end = Date.now()
-    const duration = end - start;
-    console.log("This is the duration of the store function");
-    console.log(duration)
-    console.log("--------------------");
+
+    const endStore = Date.now()
+    const durationStore = endStore - startStore;
+    fs.appendFile("./duration-store.txt", durationStore.toString() + "\n", err => {
+        if (err) {
+            console.log(err)
+        }
+    })
     /*     console.log(result)
-        console.log(ethers.utils.formatEther(result.gasPrice))
+        console.log(ethers.utils.formatEther(result.gasPrice)) //the gasPrice and gasLimit is set by me in case of local environment. 
         console.log(ethers.utils.formatEther(result.gasLimit)) */
 
-    console.log("This is the transaction: ");
-    const start2 = Date.now();
-
+    console.log("Transaction started...")
+    const startTransfer = Date.now();
     await contract.transfer({
         value: ethers.utils.parseUnits("1", "ether"),
-/*         nonce: await provider.getTransactionCount(process.env.PUBLIC_KEY_GANACHE_BOB)
- */    });
-    const end2 = Date.now()
-    const duration2 = end2 - start2;
-    console.log("This is the duration of the transfer function");
-    console.log(duration2)
-    console.log("--------------------");
-    console.log("--------------------");
-
-    jsonReader("./data.json", (err, data) => {
-        if (err) {
-            console.log(err);
-        } else {
-            data.shift();
-            fs.writeFile("./data.json", JSON.stringify(data, null, 2), err => {
-                if (err) {
-                    console.log(err)
-                }
-            })
-
-        }
     });
-
-
+    const endTransfer = Date.now()
+    console.log("Transaction completed")
+    const durationTransfer = endTransfer - startTransfer;
+    fs.appendFile("./duration-transfer.txt", durationTransfer.toString() + "\n", err => {
+        if (err) {
+            console.log(err)
+        }
+    })
 }
 
 
@@ -90,18 +73,33 @@ function myLoop(contract) {         //  create a loop function
             })//mycode
         i++;                    //  increment the counter
         if (i < 20) {           //  if the counter < 10, call the loop function
+
+
+            jsonReader("./data.json", (err, data) => {
+                if (err) {
+                    console.log(err);
+                } else {
+                    data.shift();
+                    fs.writeFile("./data.json", JSON.stringify(data, null, 2), err => {
+                        if (err) {
+                            console.log(err)
+                        }
+                    })
+
+                }
+            });
+
             myLoop(contract);             //  ..  again which will trigger another 
         }                       //  ..  setTimeout()
-    }, 5000)
+
+    }, 1000)
+
 }
 
 const promise1 = Promise.resolve(attach())
 promise1.then((contract) => {
     myLoop(contract)
 });
-
-
-/* myLoop();     */               //  start the loop
 
 function jsonReader(filePath, cb) {
     fs.readFile(filePath, "utf-8", (err, fileData) => {
