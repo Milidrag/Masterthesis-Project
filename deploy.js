@@ -9,7 +9,7 @@ async function main() {
     //http://0.0.0.0:7545
     const provider = new ethers.providers.JsonRpcProvider(process.env.PROVIDER_ALCHEMY);
     const wallet = new ethers.Wallet(
-        process.env.PRIVATE_KEY_GOERLI_BOB,
+        process.env.PRIVATE_KEY_GOERLI_ALICE,
         provider
     );
     const abi = fs.readFileSync("./1_Storage_sol_Storage.abi", "utf8");
@@ -22,7 +22,7 @@ async function main() {
     console.log(contract.address);
     const transactionReceipt = await contract.deployTransaction.wait(1);
     console.log("Here is the deployment transaction (transaction response): ");
-    console.log(transactionReceipt);
+    /* console.log(transactionReceipt); */
 
 }
 
