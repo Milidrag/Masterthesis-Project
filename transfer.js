@@ -12,13 +12,13 @@ async function main(contract) {
     console.log(jsonStringFirst)
     const startStore = Date.now();
     await contract.store(jsonStringFirst, {
-        gasPrice: 1000,
+        gasPrice: 1000,                                                                 //setting gasPrice and gasLimit is important for Ganache 
         gasLimit: 900000
-    });                              //store the value on the BC
+    });
 
     const endStore = Date.now()
     const durationStore = endStore - startStore;
-    fs.appendFile("./duration-store.txt", durationStore.toString() + "\n", err => {
+    fs.appendFile("./duration-store.txt", durationStore.toString() + "\n", err => {     //writing duration to file
         if (err) {
             console.log(err)
         }
@@ -62,25 +62,23 @@ async function attach() {
     return contract;
 }
 
-var i = 1;                  //  set your counter to 1
-function myLoop(contract) {         //  create a loop function
-    setTimeout(function () {   //  call a 3s setTimeout when the loop is called
+var i = 1;                                                                              //  set your counter to 1
+function myLoop(contract) {                                                             //  create a loop function
+    setTimeout(function () {                                                            //  call a 3s setTimeout when the loop is called
         main(contract)
             .then(() => console.log(""))
             .catch((error) => {
                 console.error(error)
                 process.exit(1)
-            })//mycode
-        i++;                    //  increment the counter
-        if (i < 20) {           //  if the counter < 10, call the loop function
-
-
-            jsonReader("./data.json", (err, data) => {
+            })
+        i++;                                                                             //  increment the counter
+        if (i < 20) {                                                                    //  if the counter < 20, call the loop function
+            jsonReader("./data.json", (err, data) => {                                  //jsonReader takes the next line of data.json                
                 if (err) {
                     console.log(err);
                 } else {
-                    data.shift();
-                    fs.writeFile("./data.json", JSON.stringify(data, null, 2), err => {
+                    data.shift();                                                       //data.shift is called to pop the first entry as it will be stored on the BC
+                    fs.writeFile("./data.json", JSON.stringify(data, null, 2), err => { //write the json (minus one entry) back to data.json
                         if (err) {
                             console.log(err)
                         }
@@ -90,13 +88,13 @@ function myLoop(contract) {         //  create a loop function
             });
 
             myLoop(contract);             //  ..  again which will trigger another 
-        }                       //  ..  setTimeout()
+        }
 
-    }, 1000)
+    }, 1000)  //the function is called every second from new     
 
 }
 
-const promise1 = Promise.resolve(attach())
+const promise1 = Promise.resolve(attach())  //calling attach. As the contract object is returned as a promise the promise has to be resolved
 promise1.then((contract) => {
     myLoop(contract)
 });
