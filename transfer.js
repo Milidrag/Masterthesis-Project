@@ -5,28 +5,8 @@ require('dotenv').config();
 
 
 
-async function main() {
-    //compile them in our code 
-    //compile them separately 
-    //http://0.0.0.0:7545
+async function main(contract) {
 
-    const { API_KEY, PRIVATE_KEY_GOERLI_BOB } = process.env;
-    const settings = {
-        apiKey: API_KEY,
-        network: Network.ETH_GOERLI, // Replace with your network.
-    };
-
-    const alchemy = new Alchemy(settings);
-    const wallet = new Wallet(PRIVATE_KEY_GOERLI_BOB, alchemy);
-
-
-    const abi = fs.readFileSync("./1_Storage_sol_Storage.abi", "utf8");
-    const binary = fs.readFileSync("./1_Storage_sol_Storage.bin", "utf8");
-
-    const contractFactory = new ethers.ContractFactory(abi, binary, wallet);
-    const contract = await contractFactory.attach(
-        process.env.CONTRACT_ADDRESS_GOERLI
-    );
 
     jsonString = fs.readFileSync("./data.json", "utf-8");
     jsonStringFirst = JSON.parse(jsonString)[0];
@@ -55,43 +35,66 @@ async function main() {
         console.log("test " + storageValue); */
 
     console.log("-------------------------------");
-    jsonReader("./data.json", (err, data) => {
-        if (err) {
-            console.log(err);
-        } else {
-            data.shift();
-            fs.writeFile("./data.json", JSON.stringify(data, null, 2), err => {
-                if (err) {
-                    console.log(err)
-                }
-            })
-
-        }
-    });
-
-
 }
 
+async function attach() {
+    const { API_KEY, PRIVATE_KEY_GOERLI_BOB } = process.env;
+    const settings = {
+        apiKey: API_KEY,
+        network: Network.ETH_GOERLI, // Replace with your network.
+    };
+
+    const alchemy = new Alchemy(settings);
+    const wallet = new Wallet(PRIVATE_KEY_GOERLI_BOB, alchemy);
 
 
-var i = 1;                  //  set your counter to 1
+    const abi = fs.readFileSync("./1_Storage_sol_Storage.abi", "utf8");
+    const binary = fs.readFileSync("./1_Storage_sol_Storage.bin", "utf8");
 
-function myLoop() {         //  create a loop function
-    setTimeout(function () {   //  call a 3s setTimeout when the loop is called
-        main()
-            .then(() => console.log("hello"))
+    const contractFactory = new ethers.ContractFactory(abi, binary, wallet);
+    const contract = await contractFactory.attach(
+        process.env.CONTRACT_ADDRESS_GOERLI
+    );
+
+    return contract;
+}
+
+var i = 1;                                                                              //  set your counter to 1
+function myLoop(contract) {                                                             //  create a loop function
+    setTimeout(function () {                                                            //  call a 3s setTimeout when the loop is called
+        main(contract)
+            .then(() => console.log(""))
             .catch((error) => {
                 console.error(error)
                 process.exit(1)
-            })//mycode
-        i++;                    //  increment the counter
-        if (i < 2) {           //  if the counter < 10, call the loop function
-            myLoop();             //  ..  again which will trigger another 
-        }                       //  ..  setTimeout()
-    }, 2000)
+            })
+        i++;                                                                             //  increment the counter
+        if (i < 20) {                                                                    //  if the counter < 20, call the loop function
+            jsonReader("./data.json", (err, data) => {                                  //jsonReader takes the next line of data.json                
+                if (err) {
+                    console.log(err);
+                } else {
+                    data.shift();                                                       //data.shift is called to pop the first entry as it will be stored on the BC
+                    fs.writeFile("./data.json", JSON.stringify(data, null, 2), err => { //write the json (minus one entry) back to data.json
+                        if (err) {
+                            console.log(err)
+                        }
+                    })
+
+                }
+            });
+
+            myLoop(contract);             //  ..  again which will trigger another 
+        }
+
+    }, 1000)  //the function is called every second from new     
+
 }
 
-myLoop();                   //  start the loop
+const promise1 = Promise.resolve(attach())  //calling attach. As the contract object is returned as a promise the promise has to be resolved
+promise1.then((contract) => {
+    myLoop(contract)
+});
 
 function jsonReader(filePath, cb) {
     fs.readFile(filePath, "utf-8", (err, fileData) => {

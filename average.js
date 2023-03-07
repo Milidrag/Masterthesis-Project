@@ -20,3 +20,4 @@ const avg = sum / lines.length;
 
 console.log('Summe:', sum);
 console.log('Durchschnitt:', avg);
+
