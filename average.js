@@ -8,7 +8,7 @@ const fileContent = fs.readFileSync(filePath, 'utf8');
 
 // Text in ein Array von Zeilen aufteilen
 const lines = fileContent.split('\n');
-lines.pop();
+lines.pop(); //die letzte Zeile ist manchmal leer. 
 
 // Array von Zeilen in ein Array von Zahlen umwandeln und die Summe berechnen
 const sum = lines.reduce((acc, cur) => acc + parseInt(cur.trim()), 0);
