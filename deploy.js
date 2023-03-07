@@ -21,7 +21,8 @@ async function main() {
     console.log("This is the address of your contract");
     console.log(contract.address);
     const transactionReceipt = await contract.deployTransaction.wait(1);
-    console.log("Here is the deployment transaction (transaction response): " + transactionReceipt);
+    console.log("Here is the deployment transaction (transaction response): ");
+    console.log(transactionReceipt);
 
 }
 
