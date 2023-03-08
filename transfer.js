@@ -63,34 +63,36 @@ async function main(contract) {
 
     //concat data
     //TODO
+    let jsonArray = []
     console.log("concat..")
-    const ipfsData = JSON.parse(contents.substring(contents.indexOf('{')))
+    if (contents.length > 2) {
+        console.log("here is contenst")
+        console.log(contents)
+        const ipfsData = JSON.parse(contents.substring(contents.indexOf('[')))
+        ipfsData.push(jsonStringFirst)
+        jsonArray = ipfsData
+    } else {
+        jsonArray.push(jsonStringFirst)
+    }
 
-    const jsonArray = []
-    jsonArray.push(ipfsData)
-    jsonArray.push(jsonStringFirst)
 
     console.log(jsonArray)
 
-
-
-
-
-
     //send data
-    /*     await client.add(JSON.stringify(jsonStringFirst)).then((res) => {
-    
-            //here I have to call the contract and send the hash
-            console.log(`Here is the res ${res}`);
-            contract.sendHash(res.path)
-    
-        });
-     */
+    await client.add(JSON.stringify(jsonArray)).then((res) => {
+
+        //here I have to call the contract and send the hash
+        console.log("res...");
+        console.log(res)
+        contract.sendHash(res.path)
+
+    });
 
 
 
 
 
+    console.log(await contract.getHash())
 
 
 
