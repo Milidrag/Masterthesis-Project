@@ -106,43 +106,31 @@ async function main(contract) {
                 console.log(err)
             }
         })
-
-
-
     });
 
-    console.log("Calling block confirmation time of the SetHash function...")
-    const BlockConfirmationTimeSetHashStart = Date.now()
-    await transactionResponseSetHash.wait()
-    const BlockConfirmationTimeSetHashEnd = Date.now()
-    console.log("Writing block confirmation time inside duration-BlockConfirmationTime-SET-HASH file...")
-    const BlockConfirmationTimeSetHashDuration = BlockConfirmationTimeSetHashEnd - BlockConfirmationTimeSetHashStart
-    fs.appendFile("./duration-BlockConfirmationTime-SET-HASH.txt", BlockConfirmationTimeSetHashDuration.toString() + "\n", err => {     //writing duration to file
+    //IPFS end
+    const transaction = {
+        to: CONTRACT_ADDRESS_GOERLI_IPFS_2,
+        data: TRANSFER_SC_FUNCTION,
+        value: Utils.parseEther("0.001"),
+        gasLimit: 50000, //better not to set the values manually. the price will be calculated automatically at a fair fee. 
+        maxPriorityFeePerGas: Utils.parseUnits("15", "wei"),
+        type: 2,
+        chainId: 5, // Corresponds to ETH_GOERLI
+    };
+
+    console.log("Start calling transfer function...")
+    const startTransfer = Date.now();
+    let transactionResponseTransfer = await wallet.sendTransaction(transaction);
+    const endTransfer = Date.now()
+    console.log("End calling transfer function")
+    const durationTransfer = endTransfer - startTransfer;
+    console.log("Writing duration of calling store function inside duration-TRANSFER.txt...")
+    fs.appendFile("./duration-TRANSFER.txt", durationTransfer.toString() + "\n", err => {
         if (err) {
             console.log(err)
         }
     })
-
-    //IPFS end
-
-    /*
-    
-
-    const transaction = {
-            to: CONTRACT_ADDRESS_GOERLI_IPFS,
-            data: TRANSFER_SC_FUNCTION,
-            value: Utils.parseEther("0.001"),
-            maxPriorityFeePerGas: Utils.parseUnits("15", "wei"),
-            type: 2,
-            chainId: 5, // Corresponds to ETH_GOERLI
-        };
-    
-
-        console.log("Sending transaction...")
-
-        const sentTx = await wallet.sendTransaction(transaction);
-    
- */
 }
 
 
