@@ -42,9 +42,9 @@ async function main(contract) {
     //call data
     //TODO take the hash from the contract and call with the client the data
     const hashOldData = await contract.getHash();
-    console.log(hashOldData)
     const result = await client.get(hashOldData)
-    console.log(result)
+
+
 
     // create a string to append contents to
     let contents = ""
@@ -59,11 +59,22 @@ async function main(contract) {
     // remove null characters
     contents = contents.replace(/\0/g, "")
 
-    console.log(contents)
 
 
     //concat data
     //TODO
+    console.log("concat..")
+    const ipfsData = JSON.parse(contents.substring(contents.indexOf('{')))
+
+    const jsonArray = []
+    jsonArray.push(ipfsData)
+    jsonArray.push(jsonStringFirst)
+
+    console.log(jsonArray)
+
+
+
+
 
 
     //send data
