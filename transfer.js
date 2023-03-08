@@ -5,42 +5,29 @@ require('dotenv').config();
 
 
 
-async function main() {
-    //compile them in our code 
-    //compile them separately 
-    //http://0.0.0.0:7545
+const { API_KEY, PRIVATE_KEY_GOERLI_ALICE, TRANSFER_SC_FUNCTION, CONTRACT_ADDRESS_GOERLI_IPFS, INFURA_PROJECT_ID, INFURA_API_SECRET } = process.env;
+const settings = {
+    apiKey: API_KEY,
+    network: Network.ETH_GOERLI,
+};
 
-    const { API_KEY, PRIVATE_KEY_GOERLI_BOB } = process.env;
-    const settings = {
-        apiKey: API_KEY,
-        network: Network.ETH_GOERLI, // Replace with your network.
-    };
-
-    const alchemy = new Alchemy(settings);
-    const wallet = new Wallet(PRIVATE_KEY_GOERLI_BOB, alchemy);
+const alchemy = new Alchemy(settings);
+const wallet = new Wallet(PRIVATE_KEY_GOERLI_ALICE, alchemy);
+const abi = fs.readFileSync("./1_Storage_sol_Storage.abi", "utf8");
+const binary = fs.readFileSync("./1_Storage_sol_Storage.bin", "utf8");
 
 
-    const abi = fs.readFileSync("./1_Storage_sol_Storage.abi", "utf8");
-    const binary = fs.readFileSync("./1_Storage_sol_Storage.bin", "utf8");
-
-    const contractFactory = new ethers.ContractFactory(abi, binary, wallet);
-    const contract = await contractFactory.attach(
-        process.env.CONTRACT_ADDRESS_GOERLI_IPFS
-    );
-
+async function main(contract) {
     jsonString = fs.readFileSync("./data.json", "utf-8");
     jsonStringFirst = JSON.parse(jsonString)[0];
-
 
     //const result = await contract.store(jsonStringFirst);
     //now with IPFS
     console.log(JSON.stringify(jsonStringFirst));
     //ipfsClient(JSON.stringify(jsonStringFirst));
 
-
     //IPFS start
     const { create } = await import('ipfs-http-client')
-    const { INFURA_PROJECT_ID, INFURA_API_SECRET } = process.env;
 
     const client = await create(
         {
@@ -52,74 +39,147 @@ async function main() {
             }
         })
 
-    let result = await client.add(JSON.stringify(jsonStringFirst)).then((res) => {
-        /*         return res.data;
-         */
-        contract.sendHash(res.data)
-    });
+    //call data
+    //TODO take the hash from the contract and call with the client the data
+    const hashOldData = await contract.getHash();
+    console.log(hashOldData)
+    const result = await client.get(hashOldData)
+    console.log(result)
 
-    /*     console.log("here ist the result" + result);
+    // create a string to append contents to
+    let contents = ""
+
+
+    // loop over incoming data
+    for await (const item of result) {
+        // turn string buffer to string and append to contents
+        contents += new TextDecoder().decode(item)
+    }
+
+    // remove null characters
+    contents = contents.replace(/\0/g, "")
+
+    console.log(contents)
+
+
+    //concat data
+    //TODO
+
+
+    //send data
+    /*     await client.add(JSON.stringify(jsonStringFirst)).then((res) => {
     
-        const hashResult = await contract.sendHash(result); */
+            //here I have to call the contract and send the hash
+            console.log(`Here is the res ${res}`);
+            contract.sendHash(res.path)
+    
+        });
+     */
 
-    //IPFS end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     /* 
-        const transaction = {
-            to: "0x1FaDaBd1e0783B3B19bd610B3263B5fdE5f4202B",
-            data: "0x8a4068dd",
+        console.log(jsonStringFirst.toString())
+        let result = await client.add(jsonStringFirst.toString()).then((res) => {
+            console.log(`Here is the res ${res}`);
+            console.log(`Here is the res.data ${res.data}`);
+            
+        });
+    
+        const test = await contract.getHash();
+        console.log("Here ist der Hash")
+        console.log(test)
+        console.log(`Here is the result: ${result}`) */
+
+    //console.log("here ist the result" + result);
+    //Alice hat 0.4562 und Bob hat 0.0126
+    /*  const hashResult = await contract.sendHash(result); 
+*/
+    //IPFS end
+
+
+
+    /*     const transaction = {
+            to: CONTRACT_ADDRESS_GOERLI_IPFS,
+            data: TRANSFER_SC_FUNCTION,
             value: Utils.parseEther("0.001"),
             maxPriorityFeePerGas: Utils.parseUnits("15", "wei"),
             type: 2,
             chainId: 5, // Corresponds to ETH_GOERLI
         };
     
-        const sentTx = await wallet.sendTransaction(transaction); */
-
-    const hashResultBack = await contract.getHash();
-
-    console.log("here is your hash: please try it " + hashResultBack)
-
-
-    console.log("-------------------------------");
-    jsonReader("./data.json", (err, data) => {
-        if (err) {
-            console.log(err);
-        } else {
-            data.shift();
-            fs.writeFile("./data.json", JSON.stringify(data, null, 2), err => {
-                if (err) {
-                    console.log(err)
-                }
-            })
-
-        }
-    });
-
-
+        const sentTx = await wallet.sendTransaction(transaction);
+    
+        const hashResultBack = await contract.getHash();
+    
+        console.log("here is your hash: please try it " + hashResultBack) */
 }
 
 
 
-var i = 1;                  //  set your counter to 1
+async function attach() {
+    const contractFactory = new ethers.ContractFactory(abi, binary, wallet);
+    console.log("Attaching contract...")
+    const contract = await contractFactory.attach(CONTRACT_ADDRESS_GOERLI_IPFS);
 
-function myLoop() {         //  create a loop function
-    setTimeout(function () {   //  call a 3s setTimeout when the loop is called
-        main()
-            .then(() => console.log("hello"))
+    return contract;
+}
+
+var i = 1;                                                                              //  set your counter to 1
+function myLoop(contract) {                                                             //  create a loop function
+    setTimeout(function () {                                                            //  call a 3s setTimeout when the loop is called
+        main(contract)
+            .then(() => console.log(""))
             .catch((error) => {
                 console.error(error)
                 process.exit(1)
-            })//mycode
-        i++;                    //  increment the counter
-        if (i < 2) {           //  if the counter < 10, call the loop function
-            myLoop();             //  ..  again which will trigger another 
-        }                       //  ..  setTimeout()
-    }, 2000)
+            })
+        i++;                                                                             //  increment the counter
+        if (i < 2) {                                                                    //  if the counter < 20, call the loop function
+            jsonReader("./data.json", (err, data) => {                                  //jsonReader takes the next line of data.json                
+                if (err) {
+                    console.log(err);
+                } else {
+                    data.shift();                                                       //data.shift is called to pop the first entry as it will be stored on the BC
+                    fs.writeFile("./data.json", JSON.stringify(data, null, 2), err => { //write the json (minus one entry) back to data.json
+                        if (err) {
+                            console.log(err)
+                        }
+                    })
+                }
+            });
+            myLoop(contract);             //  ..  again which will trigger another 
+        }
+
+    }, 1000)  //the function is called every second from new     
+
 }
 
-myLoop();                   //  start the loop
+const promise1 = Promise.resolve(attach())  //calling attach. As the contract object is returned as a promise the promise has to be resolved
+promise1.then((contract) => {
+    myLoop(contract)
+});
 
 function jsonReader(filePath, cb) {
     fs.readFile(filePath, "utf-8", (err, fileData) => {
