@@ -1,77 +1,119 @@
-const { Network, Alchemy, Wallet, Utils } = require("alchemy-sdk");
+const { Network, Alchemy, Wallet, Utils } = require("alchemy-sdk");       //use Alchemy library to interact with the BC - Görli
 const ethers = require("ethers");
 const fs = require("fs-extra");
 require('dotenv').config();
 
 
-const { API_KEY, PRIVATE_KEY_GOERLI_ALICE } = process.env;
+const { API_KEY, PRIVATE_KEY_GOERLI_ALICE, TRANSFER_SC_FUNCTION, CONTRACT_ADDRESS_GOERLI_3 } = process.env;
 const settings = {
     apiKey: API_KEY,
-    network: Network.ETH_GOERLI, // Replace with your network.
+    network: Network.ETH_GOERLI,
 };
 
 const alchemy = new Alchemy(settings);
 const wallet = new Wallet(PRIVATE_KEY_GOERLI_ALICE, alchemy);
-
-
 const abi = fs.readFileSync("./1_Storage_sol_Storage.abi", "utf8");
 const binary = fs.readFileSync("./1_Storage_sol_Storage.bin", "utf8");
 
 
 async function main(contract) {
-
-
     jsonString = fs.readFileSync("./data.json", "utf-8");
     jsonStringFirst = JSON.parse(jsonString)[0];
 
+    console.log("Start calling store function...")
     const startStore = Date.now();
-    const result = await contract.store(jsonStringFirst);
+    let transactionResponseStore = await contract.store(jsonStringFirst);
     const endStore = Date.now()
+    console.log("End calling store function")
     const durationStore = endStore - startStore;
-    fs.appendFile("./duration-store.txt", durationStore.toString() + "\n", err => {     //writing duration to file
+    console.log("Writing duration of calling store function inside duration-STORE.txt...")
+    fs.appendFile("./duration-STORE.txt", durationStore.toString() + "\n", err => {     //writing duration to file
         if (err) {
             console.log(err)
         }
     })
 
+    console.log("Calling block confirmation time of the STORE function...")
+    const BlockConfirmationTimeStoreStart = Date.now()
+    await transactionResponseStore.wait()
+    const BlockConfirmationTimeStoreEnd = Date.now()
+    console.log("Writing block confirmation time inside duration-BlockConfirmationTime-STORE file...")
+    const BlockConfirmationTimeStoreDuration = BlockConfirmationTimeStoreEnd - BlockConfirmationTimeStoreStart
+    fs.appendFile("./duration-BlockConfirmationTime-STORE.txt", BlockConfirmationTimeStoreDuration.toString() + "\n", err => {     //writing duration to file
+        if (err) {
+            console.log(err)
+        }
+    })
+
+    const estimation = await contract.estimateGas.store(jsonString);
+    console.log(`Estimation value of STORE-funciton is: ${ethers.utils.formatEther(estimation)}`);
+
     const transaction = {
-        to: "0x1FaDaBd1e0783B3B19bd610B3263B5fdE5f4202B",
-        data: "0x8a4068dd",
+        to: CONTRACT_ADDRESS_GOERLI_3,
+        data: TRANSFER_SC_FUNCTION,
         value: Utils.parseEther("0.001"),
-        gasLimit: 50000,
+        gasLimit: 50000, //better not to set the values manually. the price will be calculated automatically at a fair fee. 
         maxPriorityFeePerGas: Utils.parseUnits("15", "wei"),
         type: 2,
         chainId: 5, // Corresponds to ETH_GOERLI
     };
+
+
+
+    console.log("Start calling transfer function...")
     const startTransfer = Date.now();
-    const sentTx = await wallet.sendTransaction(transaction);
+    let transactionResponseTransfer = await wallet.sendTransaction(transaction);
     const endTransfer = Date.now()
+    console.log("End calling transfer function")
     const durationTransfer = endTransfer - startTransfer;
-    fs.appendFile("./duration-transfer.txt", durationTransfer.toString() + "\n", err => {
+    console.log("Writing duration of calling store function inside duration-TRANSFER.txt...")
+    fs.appendFile("./duration-TRANSFER.txt", durationTransfer.toString() + "\n", err => {
         if (err) {
             console.log(err)
         }
     })
-    console.log(sentTx);
 
-    /*     const dataStorage = await contract.getArr();
+    console.log("Calling block confirmation time of the TRANSFER function...")
+    const BlockConfirmationTimeTransferStart = Date.now()
+    await transactionResponseTransfer.wait()
+    const BlockConfirmationTimeTransferEnd = Date.now()
+    console.log("Writing block confirmation time inside duration-BlockConfirmationTime-TRANSFER file...")
+    const BlockConfirmationTimeTransferDuration = BlockConfirmationTimeTransferEnd - BlockConfirmationTimeTransferStart
+    fs.appendFile("./duration-BlockConfirmationTime-TRANSFER.txt", BlockConfirmationTimeTransferDuration.toString() + "\n", err => {     //writing duration to file
+        if (err) {
+            console.log(err)
+        }
+    })
+
+
+
+
+    //Recommend to reduce the loop to one circulation. Then comment in the lines below to receive an output. Reason is to have a reduced output for better legibility
+    /*     console.log("Start calling getArr-Function...")
+        const startGetArr = Date.now()
+        const dataStorage = await contract.getArr();
+        const endGetArr = Date.now()
+        const durationGetArr = endGetArr - startGetArr;
+        fs.appendFile("./duration-getArr.txt", durationGetArr.toString() + "\n", err => {
+            if (err) {
+                console.log(err)
+            }
+        })
+    
         console.log("Here ist the datastorage");
         console.log(dataStorage);
-        console.log("Das konvertierte datastorage");
+        console.log("Converted datastorage");
         const BigNumber = ethers.BigNumber;
         var storageValue = BigNumber.from(dataStorage[0][0]);
-        console.log("test " + storageValue);
-    
-        console.log("-------------------------------"); */
+        console.log("Value " + storageValue); */
 }
 
 async function attach() {
 
 
     const contractFactory = new ethers.ContractFactory(abi, binary, wallet);
-    const contract = await contractFactory.attach(
-        process.env.CONTRACT_ADDRESS_GOERLI_NEW_ALICE
-    );
+    console.log("Attaching contract...")
+    const contract = await contractFactory.attach(CONTRACT_ADDRESS_GOERLI_3);
 
     return contract;
 }
@@ -86,7 +128,7 @@ function myLoop(contract) {                                                     
                 process.exit(1)
             })
         i++;                                                                             //  increment the counter
-        if (i < 5) {                                                                    //  if the counter < 20, call the loop function
+        if (i < 2) {                                                                    //  if the counter < 20, call the loop function
             jsonReader("./data.json", (err, data) => {                                  //jsonReader takes the next line of data.json                
                 if (err) {
                     console.log(err);
@@ -97,14 +139,12 @@ function myLoop(contract) {                                                     
                             console.log(err)
                         }
                     })
-
                 }
             });
-
             myLoop(contract);             //  ..  again which will trigger another 
         }
 
-    }, 5000)  //the function is called every second from new     
+    }, 60000)  //the function is called every second from new     
 
 }
 
