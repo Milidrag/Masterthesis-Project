@@ -21,6 +21,7 @@ async function main(contract) {
     jsonString = fs.readFileSync("./data.json", "utf-8");
     jsonStringFirst = JSON.parse(jsonString)[0];
 
+    console.log("Start creating connection to IPFS client...")
     //IPFS start
     const { create } = await import('ipfs-http-client')
     const client = await create(
@@ -33,13 +34,36 @@ async function main(contract) {
             }
         })
 
+    console.log("IPFS client Connection established")
+
+    console.log("Start calling getHash-Function...")
     //take the hash from the contract and call with the client the data
+    const startGetHash = Date.now();
     const hashOldData = await contract.getHash();
+    const endGetHash = Date.now()
+    const durationGetHash = endGetHash - startGetHash;
+    console.log("Writing duration of calling getHash function inside duration-GET-HASH.txt...")
+    fs.appendFile("./duration-GET-HASH.txt", durationGetHash.toString() + "\n", err => {     //writing duration to file
+        if (err) {
+            console.log(err)
+        }
+    })
+
     // create a string to append contents to
     let contents = ""
 
     if (hashOldData.length > 2) {
+        console.log("Get IPFS data with the hash stored on the SC...")
+        const startGetHashFromIpfs = Date.now();
         const ipfsObject = await client.get(hashOldData)
+        const endGetHashFromIpfs = Date.now();
+        const durationGetHashFromIpfs = endGetHashFromIpfs - startGetHashFromIpfs;
+        console.log("Writing duration of getting hash from ipfs inside duration-GET-HASH-FROM-IPFS.txt...")
+        fs.appendFile("./duration-GET-HASH-FROM-IPFS.txt", durationGetHashFromIpfs.toString() + "\n", err => {     //writing duration to file
+            if (err) {
+                console.log(err)
+            }
+        })
 
         // loop over incoming data
         for await (const item of ipfsObject) {
@@ -50,6 +74,9 @@ async function main(contract) {
         // remove null characters
         contents = contents.replace(/\0/g, "")
     }
+
+    console.log("Constructing new data for IPFS...")
+
 
     //concat old values with jsonStringFirst
     let jsonArray = []
@@ -62,18 +89,46 @@ async function main(contract) {
         jsonArray.push(jsonStringFirst)
     }
 
-    console.log(jsonArray)
-
+    console.log("Sending data to IPFS...")
+    let transactionResponseSetHash
     //send data
     await client.add(JSON.stringify(jsonArray)).then((res) => {
         //here I have to call the contract and send the hash
-        console.log("res...");
+        console.log("Sending new hash to contract...")
         console.log(res)
-        contract.sendHash(res.path)
+        const startSetHash = Date.now();
+        transactionResponseSetHash = contract.sendHash(res.path)
+        const endSetHash = Date.now()
+        const durationSetHash = endSetHash - startSetHash
+        console.log("Writing duration of calling setHash function inside duration-SET-HASH.txt...")
+        fs.appendFile("./duration-SET-HASH.txt", durationSetHash.toString() + "\n", err => {     //writing duration to file
+            if (err) {
+                console.log(err)
+            }
+        })
+
+
+
     });
+
+    console.log("Calling block confirmation time of the SetHash function...")
+    const BlockConfirmationTimeSetHashStart = Date.now()
+    await transactionResponseSetHash.wait()
+    const BlockConfirmationTimeSetHashEnd = Date.now()
+    console.log("Writing block confirmation time inside duration-BlockConfirmationTime-SET-HASH file...")
+    const BlockConfirmationTimeSetHashDuration = BlockConfirmationTimeSetHashEnd - BlockConfirmationTimeSetHashStart
+    fs.appendFile("./duration-BlockConfirmationTime-SET-HASH.txt", BlockConfirmationTimeSetHashDuration.toString() + "\n", err => {     //writing duration to file
+        if (err) {
+            console.log(err)
+        }
+    })
+
     //IPFS end
 
-    /*     const transaction = {
+    /*
+    
+
+    const transaction = {
             to: CONTRACT_ADDRESS_GOERLI_IPFS,
             data: TRANSFER_SC_FUNCTION,
             value: Utils.parseEther("0.001"),
@@ -82,11 +137,12 @@ async function main(contract) {
             chainId: 5, // Corresponds to ETH_GOERLI
         };
     
+
+        console.log("Sending transaction...")
+
         const sentTx = await wallet.sendTransaction(transaction);
     
-        const hashResultBack = await contract.getHash();
-    
-        console.log("here is your hash: please try it " + hashResultBack) */
+ */
 }
 
 
@@ -125,7 +181,7 @@ function myLoop(contract) {                                                     
             myLoop(contract);             //  ..  again which will trigger another 
         }
 
-    }, 60000)  //the function is called every second from new     
+    }, 10000)  //the function is called every second from new     
 
 }
 
