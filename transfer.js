@@ -5,7 +5,7 @@ require('dotenv').config();
 
 
 
-const { API_KEY, PRIVATE_KEY_GOERLI_ALICE, TRANSFER_SC_FUNCTION, CONTRACT_ADDRESS_GOERLI_IPFS, INFURA_PROJECT_ID, INFURA_API_SECRET } = process.env;
+const { API_KEY, PRIVATE_KEY_GOERLI_ALICE, TRANSFER_SC_FUNCTION, CONTRACT_ADDRESS_GOERLI_IPFS_2, INFURA_PROJECT_ID, INFURA_API_SECRET } = process.env;
 const settings = {
     apiKey: API_KEY,
     network: Network.ETH_GOERLI,
@@ -21,14 +21,8 @@ async function main(contract) {
     jsonString = fs.readFileSync("./data.json", "utf-8");
     jsonStringFirst = JSON.parse(jsonString)[0];
 
-    //const result = await contract.store(jsonStringFirst);
-    //now with IPFS
-    console.log(JSON.stringify(jsonStringFirst));
-    //ipfsClient(JSON.stringify(jsonStringFirst));
-
     //IPFS start
     const { create } = await import('ipfs-http-client')
-
     const client = await create(
         {
             host: "ipfs.infura.io",
@@ -39,99 +33,45 @@ async function main(contract) {
             }
         })
 
-    //call data
-    //TODO take the hash from the contract and call with the client the data
+    //take the hash from the contract and call with the client the data
     const hashOldData = await contract.getHash();
-    const result = await client.get(hashOldData)
-
-
-
     // create a string to append contents to
     let contents = ""
 
+    if (hashOldData.length > 2) {
+        const ipfsObject = await client.get(hashOldData)
 
-    // loop over incoming data
-    for await (const item of result) {
-        // turn string buffer to string and append to contents
-        contents += new TextDecoder().decode(item)
+        // loop over incoming data
+        for await (const item of ipfsObject) {
+            // turn string buffer to string and append to contents
+            contents += new TextDecoder().decode(item)
+        }
+
+        // remove null characters
+        contents = contents.replace(/\0/g, "")
     }
 
-    // remove null characters
-    contents = contents.replace(/\0/g, "")
-
-
-
-    //concat data
-    //TODO
+    //concat old values with jsonStringFirst
     let jsonArray = []
     console.log("concat..")
-    if (contents.length > 2) {
-        console.log("here is contenst")
-        console.log(contents)
-        const ipfsData = JSON.parse(contents.substring(contents.indexOf('[')))
-        ipfsData.push(jsonStringFirst)
-        jsonArray = ipfsData
+    if (contents.length > 2) { //in case a new contract is deployed and the hash value is empty
+        const ipfsData = JSON.parse(contents.substring(contents.indexOf('['))) //find array and construct a substring
+        ipfsData.push(jsonStringFirst) //push new value to exisiting array
+        jsonArray = ipfsData //assign to 
     } else {
         jsonArray.push(jsonStringFirst)
     }
-
 
     console.log(jsonArray)
 
     //send data
     await client.add(JSON.stringify(jsonArray)).then((res) => {
-
         //here I have to call the contract and send the hash
         console.log("res...");
         console.log(res)
         contract.sendHash(res.path)
-
     });
-
-
-
-
-
-    console.log(await contract.getHash())
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /* 
-        console.log(jsonStringFirst.toString())
-        let result = await client.add(jsonStringFirst.toString()).then((res) => {
-            console.log(`Here is the res ${res}`);
-            console.log(`Here is the res.data ${res.data}`);
-            
-        });
-    
-        const test = await contract.getHash();
-        console.log("Here ist der Hash")
-        console.log(test)
-        console.log(`Here is the result: ${result}`) */
-
-    //console.log("here ist the result" + result);
-    //Alice hat 0.4562 und Bob hat 0.0126
-    /*  const hashResult = await contract.sendHash(result); 
-*/
     //IPFS end
-
-
 
     /*     const transaction = {
             to: CONTRACT_ADDRESS_GOERLI_IPFS,
@@ -154,7 +94,7 @@ async function main(contract) {
 async function attach() {
     const contractFactory = new ethers.ContractFactory(abi, binary, wallet);
     console.log("Attaching contract...")
-    const contract = await contractFactory.attach(CONTRACT_ADDRESS_GOERLI_IPFS);
+    const contract = await contractFactory.attach(CONTRACT_ADDRESS_GOERLI_IPFS_2);
 
     return contract;
 }
@@ -169,7 +109,7 @@ function myLoop(contract) {                                                     
                 process.exit(1)
             })
         i++;                                                                             //  increment the counter
-        if (i < 2) {                                                                    //  if the counter < 20, call the loop function
+        if (i < 5) {                                                                    //  if the counter < 20, call the loop function
             jsonReader("./data.json", (err, data) => {                                  //jsonReader takes the next line of data.json                
                 if (err) {
                     console.log(err);
@@ -185,7 +125,7 @@ function myLoop(contract) {                                                     
             myLoop(contract);             //  ..  again which will trigger another 
         }
 
-    }, 1000)  //the function is called every second from new     
+    }, 60000)  //the function is called every second from new     
 
 }
 
@@ -207,22 +147,3 @@ function jsonReader(filePath, cb) {
         }
     })
 }
-
-async function ipfsClient(transfer) {
-    const { create } = await import('ipfs-http-client')
-    const { INFURA_PROJECT_ID, INFURA_API_SECRET } = process.env;
-
-    const client = await create(
-        {
-            host: "ipfs.infura.io",
-            port: 5001,
-            protocol: "https",
-            headers: {
-                "Authorization": `Basic ${Buffer.from(INFURA_PROJECT_ID + ':' + INFURA_API_SECRET).toString("base64")}`
-            }
-        })
-
-    client.add(transfer).then((res) => {
-        console.log(res);
-    });
-};
