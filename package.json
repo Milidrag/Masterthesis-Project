@@ -9,5 +9,15 @@
   },
   "scripts": {
     "compile": "yarn solcjs --bin --abi --inlcude-path node_modules/ --base-path . -o . 1_Storage.sol"
+  },
+  "name": "masterproject",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/Milidrag/Masterthesis-Project.git",
+  "author": "Milidrag <m-ivkic@gmx.at>",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "hardhat": "^2.13.0"
   }
 }
