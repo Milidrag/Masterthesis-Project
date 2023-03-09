@@ -5,10 +5,10 @@ require('dotenv').config();
 
 
 
-const { API_KEY, PRIVATE_KEY_GOERLI_ALICE, TRANSFER_SC_FUNCTION, CONTRACT_ADDRESS_GOERLI_IPFS_2, INFURA_PROJECT_ID, INFURA_API_SECRET } = process.env;
+const { API_KEY_ALCHEMY_POLYGON, PRIVATE_KEY_GOERLI_ALICE, TRANSFER_SC_FUNCTION, CONTRACT_ADDRESS_MUMBAI, INFURA_PROJECT_ID, INFURA_API_SECRET } = process.env;
 const settings = {
-    apiKey: API_KEY,
-    network: Network.ETH_GOERLI,
+    apiKey: API_KEY_ALCHEMY_POLYGON,
+    network: Network.MATIC_MUMBAI,
 };
 
 const alchemy = new Alchemy(settings);
@@ -90,7 +90,6 @@ async function main(contract) {
     }
 
     console.log("Sending data to IPFS...")
-    let transactionResponseSetHash
     //send data
     await client.add(JSON.stringify(jsonArray)).then((res) => {
         //here I have to call the contract and send the hash
@@ -110,13 +109,13 @@ async function main(contract) {
 
     //IPFS end
     const transaction = {
-        to: CONTRACT_ADDRESS_GOERLI_IPFS_2,
+        to: CONTRACT_ADDRESS_MUMBAI,
         data: TRANSFER_SC_FUNCTION,
         value: Utils.parseEther("0.001"),
-        gasLimit: 50000, //better not to set the values manually. the price will be calculated automatically at a fair fee. 
-        maxPriorityFeePerGas: Utils.parseUnits("15", "wei"),
+        /*         gasLimit: 50000, //better not to set the values manually. the price will be calculated automatically at a fair fee. 
+                maxPriorityFeePerGas: Utils.parseUnits("15", "wei"), */
         type: 2,
-        chainId: 5, // Corresponds to ETH_GOERLI
+        chainId: 80001, // Corresponds to ETH_GOERLI
     };
 
     console.log("Start calling transfer function...")
@@ -138,7 +137,7 @@ async function main(contract) {
 async function attach() {
     const contractFactory = new ethers.ContractFactory(abi, binary, wallet);
     console.log("Attaching contract...")
-    const contract = await contractFactory.attach(CONTRACT_ADDRESS_GOERLI_IPFS_2);
+    const contract = await contractFactory.attach(CONTRACT_ADDRESS_MUMBAI);
 
     return contract;
 }
@@ -169,7 +168,7 @@ function myLoop(contract) {                                                     
             myLoop(contract);             //  ..  again which will trigger another 
         }
 
-    }, 10000)  //the function is called every second from new     
+    }, 30000)  //the function is called every second from new     
 
 }
 
