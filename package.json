@@ -11,5 +11,8 @@
     "dotenv": "^16.0.3",
     "ethers": "^6.1.0",
     "fs-extra": "^11.1.0"
+  },
+  "devDependencies": {
+    "hardhat": "^2.13.0"
   }
 }

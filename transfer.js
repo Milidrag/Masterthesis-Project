@@ -45,91 +45,95 @@ async function main(contract) {
     console.log("Writing duration of calling getHash function inside duration-GET-HASH.txt...")
     fs.appendFile("./duration-GET-HASH.txt", durationGetHash.toString() + "\n", err => {     //writing duration to file
         if (err) {
+            s
             console.log(err)
         }
     })
 
     // create a string to append contents to
     let contents = ""
-
-    if (hashOldData.length > 2) {
-        console.log("Get IPFS data with the hash stored on the SC...")
-        const startGetHashFromIpfs = Date.now();
-        const ipfsObject = await client.get(hashOldData)
-        const endGetHashFromIpfs = Date.now();
-        const durationGetHashFromIpfs = endGetHashFromIpfs - startGetHashFromIpfs;
-        console.log("Writing duration of getting hash from ipfs inside duration-GET-HASH-FROM-IPFS.txt...")
-        fs.appendFile("./duration-GET-HASH-FROM-IPFS.txt", durationGetHashFromIpfs.toString() + "\n", err => {     //writing duration to file
-            if (err) {
-                console.log(err)
+    console.log("here")
+    console.log(hashOldData)
+    /*     if (hashOldData.length > 2) {
+            console.log("Get IPFS data with the hash stored on the SC...")
+            const startGetHashFromIpfs = Date.now();
+            const ipfsObject = await client.get(hashOldData)
+            const endGetHashFromIpfs = Date.now();
+            const durationGetHashFromIpfs = endGetHashFromIpfs - startGetHashFromIpfs;
+            console.log("Writing duration of getting hash from ipfs inside duration-GET-HASH-FROM-IPFS.txt...")
+            fs.appendFile("./duration-GET-HASH-FROM-IPFS.txt", durationGetHashFromIpfs.toString() + "\n", err => {     //writing duration to file
+                if (err) {
+                    console.log(err)
+                }
+            })
+    
+            // loop over incoming data
+            for await (const item of ipfsObject) {
+                // turn string buffer to string and append to contents
+                contents += new TextDecoder().decode(item)
             }
-        })
-
-        // loop over incoming data
-        for await (const item of ipfsObject) {
-            // turn string buffer to string and append to contents
-            contents += new TextDecoder().decode(item)
+    
+            // remove null characters
+            contents = contents.replace(/\0/g, "")
         }
-
-        // remove null characters
-        contents = contents.replace(/\0/g, "")
-    }
-
-    console.log("Constructing new data for IPFS...")
-
-
-    //concat old values with jsonStringFirst
-    let jsonArray = []
-    console.log("concat..")
-    if (contents.length > 2) { //in case a new contract is deployed and the hash value is empty
-        const ipfsData = JSON.parse(contents.substring(contents.indexOf('['))) //find array and construct a substring
-        ipfsData.push(jsonStringFirst) //push new value to exisiting array
-        jsonArray = ipfsData //assign to 
-    } else {
-        jsonArray.push(jsonStringFirst)
-    }
-
-    console.log("Sending data to IPFS...")
-    //send data
-    await client.add(JSON.stringify(jsonArray)).then((res) => {
-        //here I have to call the contract and send the hash
-        console.log("Sending new hash to contract...")
-        console.log(res)
-        const startSetHash = Date.now();
-        transactionResponseSetHash = contract.sendHash(res.path)
-        const endSetHash = Date.now()
-        const durationSetHash = endSetHash - startSetHash
-        console.log("Writing duration of calling setHash function inside duration-SET-HASH.txt...")
-        fs.appendFile("./duration-SET-HASH.txt", durationSetHash.toString() + "\n", err => {     //writing duration to file
-            if (err) {
-                console.log(err)
-            }
-        })
-    });
+    
+        console.log("Constructing new data for IPFS...")
+    
+    
+        //concat old values with jsonStringFirst
+        let jsonArray = []
+        console.log("concat..")
+        if (contents.length > 2) { //in case a new contract is deployed and the hash value is empty
+            const ipfsData = JSON.parse(contents.substring(contents.indexOf('['))) //find array and construct a substring
+            ipfsData.push(jsonStringFirst) //push new value to exisiting array
+            jsonArray = ipfsData //assign to 
+        } else {
+            jsonArray.push(jsonStringFirst)
+        }
+    
+        console.log("Sending data to IPFS...")
+        //send data
+        await client.add(JSON.stringify(jsonArray)).then((res) => {
+            //here I have to call the contract and send the hash
+            console.log("Sending new hash to contract...")
+            console.log(res)
+            const startSetHash = Date.now();
+            transactionResponseSetHash = contract.sendHash(res.path)
+            const endSetHash = Date.now()
+            const durationSetHash = endSetHash - startSetHash
+            console.log("Writing duration of calling setHash function inside duration-SET-HASH.txt...")
+            fs.appendFile("./duration-SET-HASH.txt", durationSetHash.toString() + "\n", err => {     //writing duration to file
+                if (err) {
+                    console.log(err)
+                }
+            })
+        }); */
 
     //IPFS end
-    const transaction = {
-        to: CONTRACT_ADDRESS_MUMBAI,
-        data: TRANSFER_SC_FUNCTION,
-        value: Utils.parseEther("0.001"),
-        /*         gasLimit: 50000, //better not to set the values manually. the price will be calculated automatically at a fair fee. 
-                maxPriorityFeePerGas: Utils.parseUnits("15", "wei"), */
-        type: 2,
-        chainId: 80001, // Corresponds to ETH_GOERLI
-    };
-
-    console.log("Start calling transfer function...")
-    const startTransfer = Date.now();
-    let transactionResponseTransfer = await wallet.sendTransaction(transaction);
-    const endTransfer = Date.now()
-    console.log("End calling transfer function")
-    const durationTransfer = endTransfer - startTransfer;
-    console.log("Writing duration of calling store function inside duration-TRANSFER.txt...")
-    fs.appendFile("./duration-TRANSFER.txt", durationTransfer.toString() + "\n", err => {
-        if (err) {
-            console.log(err)
-        }
-    })
+    /*   const transaction = {
+          to: CONTRACT_ADDRESS_MUMBAI,
+          data: TRANSFER_SC_FUNCTION,
+          value: Utils.parseEther("0.001"),
+          chainId: 80001, // Corresponds to Mumbai
+      };
+  
+      const estimation = await contract.estimateGas.transfer();
+      transaction.gasLimit = estimation
+  
+      console.log("Start calling transfer function...")
+      const startTransfer = Date.now();
+      let transactionResponseTransfer = await wallet.sendTransaction(transaction);
+      const endTransfer = Date.now()
+      console.log("End calling transfer function")
+      const durationTransfer = endTransfer - startTransfer;
+      console.log("Writing duration of calling store function inside duration-TRANSFER.txt...")
+      fs.appendFile("./duration-TRANSFER.txt", durationTransfer.toString() + "\n", err => {
+          if (err) {
+              console.log(err)
+          }
+      })
+  
+      console.log(transactionResponseTransfer) */
 }
 
 
@@ -152,7 +156,7 @@ function myLoop(contract) {                                                     
                 process.exit(1)
             })
         i++;                                                                             //  increment the counter
-        if (i < 5) {                                                                    //  if the counter < 20, call the loop function
+        if (i < 2) {                                                                    //  if the counter < 20, call the loop function
             jsonReader("./data.json", (err, data) => {                                  //jsonReader takes the next line of data.json                
                 if (err) {
                     console.log(err);
@@ -168,7 +172,7 @@ function myLoop(contract) {                                                     
             myLoop(contract);             //  ..  again which will trigger another 
         }
 
-    }, 30000)  //the function is called every second from new     
+    }, 1000)  //the function is called every second from new     
 
 }
 
