@@ -1,15 +1,4 @@
 {
-  "dependencies": {
-    "alchemy-sdk": "^2.4.1",
-    "dotenv": "^16.0.3",
-    "ethers": "^5.7.2",
-    "fastify": "^4.12.0",
-    "ipfs-http-client": "^60.0.0",
-    "solc": "0.8.7-fixed"
-  },
-  "scripts": {
-    "compile": "yarn solcjs --bin --abi --inlcude-path node_modules/ --base-path . -o . 1_Storage.sol"
-  },
   "name": "masterproject",
   "version": "1.0.0",
   "main": "index.js",
@@ -17,7 +6,10 @@
   "author": "Milidrag <m-ivkic@gmx.at>",
   "license": "MIT",
   "private": true,
-  "devDependencies": {
-    "hardhat": "^2.13.0"
+  "dependencies": {
+    "alchemy-sdk": "^2.6.0",
+    "dotenv": "^16.0.3",
+    "ethers": "^6.1.0",
+    "fs-extra": "^11.1.0"
   }
 }
