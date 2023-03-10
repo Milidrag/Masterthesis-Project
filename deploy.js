@@ -11,7 +11,7 @@ async function main() {
     const { PROVIDER_ALCHEMY_POLYGON } = process.env;
 
 
-    const provider = new ethers.providers.JsonRpcProvider(PROVIDER_ALCHEMY_POLYGON);
+    const provider = new ethers.providers.JsonRpcProvider(process.env.PROVIDER_ALCHEMY_POLYGON);
     const wallet = new ethers.Wallet(
         process.env.PRIVATE_KEY_GOERLI_ALICE,
         provider
