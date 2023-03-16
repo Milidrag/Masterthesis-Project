@@ -2,9 +2,16 @@ const { expect } = require("chai");
 const hre = require("hardhat");
 
 describe("Gas cost measurement for store function", function () {
+
+  let contractFactory, storage
+  beforeEach(async function () {
+    contractFactory = await hre.ethers.getContractFactory("Storage");
+    storage = await contractFactory.attach(                                     //here the contract object is attached to contract address 
+      process.env.CONTRACT_ADDRESS_GANACHE
+    );
+  })
+
   it("Should measure gas cost of store function", async function () {
-    const Storage = await hre.ethers.getContractFactory("Storage");
-    const storage = await Storage.deploy();
 
     const iotData = JSON.stringify({
       "Axis-X": 1067,
