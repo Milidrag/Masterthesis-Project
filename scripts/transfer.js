@@ -1,4 +1,4 @@
-const ethers = require("ethers");  //use ether library to interact with the BC
+const hre = require("hardhat"); //use ether library to interact with the BC
 const fs = require("fs-extra");    //fs-extra package is a library to interact with the local file storage
 require('dotenv').config();        //dotenv package is used to hide private data on public repository. the ".env"-file is not committed on the repository
 
@@ -24,13 +24,13 @@ async function main(contract) {
         }
     })
     /*     console.log(result)
-        console.log(ethers.utils.formatEther(result.gasPrice)) //the gasPrice and gasLimit is set by me in case of local environment. 
-        console.log(ethers.utils.formatEther(result.gasLimit)) */
+        console.log(hre.ethers.utils.formatEther(result.gasPrice)) //the gasPrice and gasLimit is set by me in case of local environment. 
+        console.log(hre.ethers.utils.formatEther(result.gasLimit)) */
 
     console.log("Transaction started...")
     const startTransfer = Date.now();
     await contract.transfer({
-        value: ethers.utils.parseUnits("1", "ether"),
+        value: hre.ethers.utils.parseUnits("1", "ether"),
     });
     const endTransfer = Date.now()
     console.log("Transaction completed")
@@ -45,15 +45,15 @@ async function main(contract) {
 
 
 async function attach() {
-    const provider = new ethers.providers.JsonRpcProvider(process.env.PROVIDER_GANACHE); //provider is the host with the port
-    const wallet = new ethers.Wallet(                                                    //wallet object contains the PK and the provider
+    const provider = new hre.ethers.providers.JsonRpcProvider(process.env.PROVIDER_GANACHE); //provider is the host with the port
+    const wallet = new hre.ethers.Wallet(                                                    //wallet object contains the PK and the provider
         process.env.PRIVATE_KEY_GANACHE_BOB,
         provider
     );
     const abi = fs.readFileSync("./1_Storage_sol_Storage.abi", "utf8");                //ABI is the abstraction of the contract
     const binary = fs.readFileSync("./1_Storage_sol_Storage.bin", "utf8");             //binary file of the contract
 
-    const contractFactory = new ethers.ContractFactory(abi, binary, wallet);           //contractFactory can be deployment or for connection to a contract
+    const contractFactory = new hre.ethers.ContractFactory(abi, binary, wallet);           //contractFactory can be deployment or for connection to a contract
     console.log("Attaching, please wait...");
     const contract = await contractFactory.attach(                                     //here the contract object is attached to contract address 
         process.env.CONTRACT_ADDRESS_GANACHE
@@ -90,7 +90,7 @@ function myLoop(contract) {                                                     
             myLoop(contract);             //  ..  again which will trigger another 
         }
 
-    }, 1000)  //the function is called every second from new     
+    }, 5000)  //the function is called every second from new     
 
 }
 
