@@ -2,7 +2,7 @@ require("@nomicfoundation/hardhat-toolbox");
 require('dotenv').config();
 require("hardhat-gas-reporter")
 
-const { PROVIDER_GANACHE, PRIVATE_KEY_GANACHE_BOB } = process.env
+const { PROVIDER_GANACHE, PRIVATE_KEY_GANACHE_BOB, COINMARKET } = process.env
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -17,5 +17,7 @@ module.exports = {
   },
   gasReporter: {
     enabled: true,
+    currency: "USD",
+    coinmarketcap: COINMARKET
   }
 };
