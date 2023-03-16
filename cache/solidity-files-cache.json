@@ -1,12 +1,12 @@
 {
   "_format": "hh-sol-cache-2",
   "files": {
-    "/home/milo/blockchain/Masterthesis-Project/contracts/1_Storage.sol": {
-      "lastModificationDate": 1678114981309,
-      "contentHash": "37877cb174e52f97682ab895898a74f5",
+    "C:\\Users\\Milo\\Documents\\FH Campus Wien\\Masterarbeit\\Projekt\\masterproject\\contracts\\1_Storage.sol": {
+      "lastModificationDate": 1678967167419,
+      "contentHash": "4a68802988dcd9ed6867827f29645724",
       "sourceName": "contracts/1_Storage.sol",
       "solcConfig": {
-        "version": "0.8.18",
+        "version": "0.8.7",
         "settings": {
           "optimizer": {
             "enabled": false,
@@ -30,7 +30,7 @@
       },
       "imports": [],
       "versionPragmas": [
-        "0.8.18"
+        "0.8.7"
       ],
       "artifacts": [
         "Storage"
