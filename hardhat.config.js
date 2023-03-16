@@ -1,5 +1,6 @@
 require("@nomicfoundation/hardhat-toolbox");
 require('dotenv').config();
+require("hardhat-gas-reporter")
 
 const { PROVIDER_GANACHE, PRIVATE_KEY_GANACHE_BOB } = process.env
 
@@ -13,5 +14,8 @@ module.exports = {
       accounts: [PRIVATE_KEY_GANACHE_BOB],
       chainID: 1337
     }
+  },
+  gasReporter: {
+    enabled: true,
   }
 };
