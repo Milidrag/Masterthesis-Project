@@ -45,17 +45,9 @@ async function main(contract) {
 
 
 async function attach() {
-    const provider = new hre.ethers.providers.JsonRpcProvider(process.env.PROVIDER_GANACHE); //provider is the host with the port
-    const wallet = new hre.ethers.Wallet(                                                    //wallet object contains the PK and the provider
-        process.env.PRIVATE_KEY_GANACHE_BOB,
-        provider
-    );
-    const abi = fs.readFileSync("./1_Storage_sol_Storage.abi", "utf8");                //ABI is the abstraction of the contract
-    const binary = fs.readFileSync("./1_Storage_sol_Storage.bin", "utf8");             //binary file of the contract
-
-    const contractFactory = new hre.ethers.ContractFactory(abi, binary, wallet);           //contractFactory can be deployment or for connection to a contract
+    contractFactory = await hre.ethers.getContractFactory("Storage");
     console.log("Attaching, please wait...");
-    const contract = await contractFactory.attach(                                     //here the contract object is attached to contract address 
+    contract = await contractFactory.attach(                                     //here the contract object is attached to contract address 
         process.env.CONTRACT_ADDRESS_GANACHE
     );
 
