@@ -33,6 +33,11 @@ async function main(contract) {
         }
     })
 
+
+    const gasUsedStore = transactionResponseStore.gasUsed;
+    console.log(gasUsedStore)
+    console.log(`Gas used by store function: ${gasUsedStore}`);
+
     console.log("Calling block confirmation time of the STORE function...")
     const BlockConfirmationTimeStoreStart = Date.now()
     await transactionResponseStore.wait()
@@ -72,6 +77,9 @@ async function main(contract) {
             console.log(err)
         }
     })
+
+    const gasUsedTransfer = transactionResponseTransfer.gasUsed;
+    console.log(`Gas used by transfer function: ${gasUsedTransfer}`);
 
     console.log("Calling block confirmation time of the TRANSFER function...")
     const BlockConfirmationTimeTransferStart = Date.now()
@@ -144,7 +152,7 @@ function myLoop(contract) {                                                     
             myLoop(contract);             //  ..  again which will trigger another 
         }
 
-    }, 60000)  //the function is called every second from new     
+    }, 1000)  //the function is called every second from new     
 
 }
 
