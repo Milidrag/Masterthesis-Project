@@ -11,7 +11,7 @@ async function main(contract) {
     console.log("This value will be stored on the BC ");
     console.log(jsonStringFirst)
     const startStore = Date.now();
-    await contract.store(jsonStringFirst, {
+    await contract.store(JSON.stringify(jsonStringFirst), {
         gasPrice: 1000,                                                                 //setting gasPrice and gasLimit is important for Ganache 
         gasLimit: 900000
     });
