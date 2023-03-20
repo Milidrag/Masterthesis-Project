@@ -1,4 +1,3 @@
-const { expect } = require("chai");
 const hre = require("hardhat");
 
 describe("Gas cost measurement for store function", function () {
@@ -7,7 +6,7 @@ describe("Gas cost measurement for store function", function () {
     beforeEach(async function () {
         contractFactory = await hre.ethers.getContractFactory("Storage");
         storage = await contractFactory.attach(                                     //here the contract object is attached to contract address 
-            process.env.CONTRACT_ADDRESS_GANACHE
+            process.env.CONTRACT_ADDRESS_GOERLI
         );
     })
 

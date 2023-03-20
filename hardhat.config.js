@@ -1,6 +1,6 @@
 require("@nomicfoundation/hardhat-toolbox");
 
-const { PROVIDER_GANACHE, PROVIDER_ALCHEMY, COINMARKET } = process.env
+const { PRIVATE_KEY_GOERLI_ALICE, PROVIDER_ALCHEMY, COINMARKET } = process.env
 
 
 /** @type import('hardhat/config').HardhatUserConfig */
@@ -10,7 +10,7 @@ module.exports = {
   networks: {
     goerli: {
       url: PROVIDER_ALCHEMY,
-      accounts: [PRIVATE_KEY_GANACHE_BOB],
+      accounts: [PRIVATE_KEY_GOERLI_ALICE],
       chainID: 5
     }
   },

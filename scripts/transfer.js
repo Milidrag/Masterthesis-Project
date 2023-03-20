@@ -1,5 +1,5 @@
 const { Network, Alchemy, Wallet, Utils } = require("alchemy-sdk");       //use Alchemy library to interact with the BC - Görli
-const ethers = require("ethers");
+const hre = require("hardhat"); //use ether library to interact with the BC
 const fs = require("fs-extra");
 require('dotenv').config();
 
@@ -51,7 +51,7 @@ async function main(contract) {
     })
 
     const estimation = await contract.estimateGas.store(jsonString);
-    console.log(`Estimation value of STORE-funciton is: ${ethers.utils.formatEther(estimation)}`);
+    console.log(`Estimation value of STORE-funciton is: ${hre.ethers.utils.formatEther(estimation)}`);
 
     const transaction = {
         to: CONTRACT_ADDRESS_GOERLI_3,
@@ -111,7 +111,7 @@ async function main(contract) {
         console.log("Here ist the datastorage");
         console.log(dataStorage);
         console.log("Converted datastorage");
-        const BigNumber = ethers.BigNumber;
+        const BigNumber = hre.ethers.BigNumber;
         var storageValue = BigNumber.from(dataStorage[0][0]);
         console.log("Value " + storageValue); */
 }
@@ -119,7 +119,7 @@ async function main(contract) {
 async function attach() {
 
 
-    const contractFactory = new ethers.ContractFactory(abi, binary, wallet);
+    contractFactory = await hre.ethers.getContractFactory("Storage");
     console.log("Attaching contract...")
     const contract = await contractFactory.attach(CONTRACT_ADDRESS_GOERLI_3);
 
