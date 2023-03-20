@@ -1,5 +1,7 @@
 require("@nomicfoundation/hardhat-toolbox");
 require('dotenv').config();
+require("hardhat-gas-reporter")
+
 
 const { PRIVATE_KEY_GOERLI_ALICE, PROVIDER_ALCHEMY, COINMARKET } = process.env
 
