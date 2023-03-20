@@ -1,13 +1,18 @@
 {
   "dependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^2.0.2",
     "alchemy-sdk": "^2.4.1",
     "dotenv": "^16.0.3",
     "ethers": "^5.7.2",
+    "hardhat-gas-reporter": "^1.0.9",
     "solc": "0.8.7-fixed"
   },
   "scripts": {
     "compile": "yarn solcjs --bin --abi --inlcude-path node_modules/ --base-path . -o . 1_Storage.sol",
     "deploy": "yarn hardhat run scripts/deploy.js",
     "transfer": "yarn hardhat run scripts/transfer.js"
+  },
+  "devDependencies": {
+    "hardhat": "^2.13.0"
   }
 }
