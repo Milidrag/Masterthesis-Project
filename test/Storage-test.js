@@ -1,16 +1,16 @@
-const hre = require("hardhat");
+
+
+const { ethers } = require("hardhat")
+const { expect, assert } = require("chai")
 
 describe("Gas cost measurement for store function", function () {
-
-    let contractFactory, storage
+    let storageFactory, storage
     beforeEach(async function () {
-        contractFactory = await hre.ethers.getContractFactory("Storage");
-        storage = await contractFactory.attach(                                     //here the contract object is attached to contract address 
-            process.env.CONTRACT_ADDRESS_GOERLI_3
-        );
+        storageFactory = await ethers.getContractFactory("Storage")
+        storage = await storageFactory.deploy()
     })
 
-    it("Should measure gas cost of store function", async function () {
+    it("Gas cost measurement for store function", async function () {
 
         const iotData = JSON.stringify({
             "Axis-X": 1067,
@@ -29,4 +29,5 @@ describe("Gas cost measurement for store function", function () {
         console.log("Duration of store function:", duration.toString(), "ms");
 
     });
-});
+
+})
