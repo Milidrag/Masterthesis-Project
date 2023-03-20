@@ -1,7 +1,4 @@
-
-
 const { ethers } = require("hardhat")
-const { expect, assert } = require("chai")
 
 describe("Gas cost measurement for store function", function () {
     let storageFactory, storage
@@ -9,9 +6,7 @@ describe("Gas cost measurement for store function", function () {
         storageFactory = await ethers.getContractFactory("Storage")
         storage = await storageFactory.deploy()
     })
-
     it("Gas cost measurement for store function", async function () {
-
         const iotData = JSON.stringify({
             "Axis-X": 1067,
             "Axis-Y": 1670,
@@ -24,10 +19,7 @@ describe("Gas cost measurement for store function", function () {
         const receipt = await tx.wait();
         const duration = Date.now() - startTime;
 
-
         console.log("Gas used for store function:", receipt.gasUsed.toString());
         console.log("Duration of store function:", duration.toString(), "ms");
-
     });
-
 })
