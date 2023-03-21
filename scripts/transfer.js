@@ -1,5 +1,5 @@
 const { Network, Alchemy, Wallet, Utils } = require("alchemy-sdk");
-const ethers = require("ethers");
+const hre = require("hardhat");
 const fs = require("fs-extra");
 require('dotenv').config();
 
@@ -136,7 +136,7 @@ async function main(contract) {
 
 
 async function attach() {
-    const contractFactory = new ethers.ContractFactory(abi, binary, wallet);
+    contractFactory = await hre.ethers.getContractFactory("Storage");
     console.log("Attaching contract...")
     const contract = await contractFactory.attach(CONTRACT_ADDRESS_GOERLI_IPFS_2);
 
