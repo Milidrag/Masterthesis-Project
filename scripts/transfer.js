@@ -5,7 +5,7 @@ require('dotenv').config();
 
 
 
-const { API_KEY, PRIVATE_KEY_GOERLI_ALICE, TRANSFER_SC_FUNCTION, CONTRACT_ADDRESS_GOERLI_IPFS_2, INFURA_PROJECT_ID, INFURA_API_SECRET } = process.env;
+const { API_KEY, PRIVATE_KEY_GOERLI_ALICE, TRANSFER_SC_FUNCTION, CONTRACT_ADDRESS_SEPOLIA_IPFS_1, INFURA_PROJECT_ID, INFURA_API_SECRET } = process.env;
 const settings = {
     apiKey: API_KEY,
     network: Network.ETH_GOERLI,
@@ -13,9 +13,6 @@ const settings = {
 
 const alchemy = new Alchemy(settings);
 const wallet = new Wallet(PRIVATE_KEY_GOERLI_ALICE, alchemy);
-const abi = fs.readFileSync("./1_Storage_sol_Storage.abi", "utf8");
-const binary = fs.readFileSync("./1_Storage_sol_Storage.bin", "utf8");
-
 
 async function main(contract) {
     jsonString = fs.readFileSync("./data.json", "utf-8");
@@ -110,7 +107,7 @@ async function main(contract) {
 
     //IPFS end
     const transaction = {
-        to: CONTRACT_ADDRESS_GOERLI_IPFS_2,
+        to: CONTRACT_ADDRESS_SEPOLIA_IPFS_1,
         data: TRANSFER_SC_FUNCTION,
         value: Utils.parseEther("0.001"),
         gasLimit: 50000, //better not to set the values manually. the price will be calculated automatically at a fair fee. 
@@ -138,7 +135,7 @@ async function main(contract) {
 async function attach() {
     contractFactory = await hre.ethers.getContractFactory("Storage");
     console.log("Attaching contract...")
-    const contract = await contractFactory.attach(CONTRACT_ADDRESS_GOERLI_IPFS_2);
+    const contract = await contractFactory.attach(CONTRACT_ADDRESS_SEPOLIA_IPFS_1);
 
     return contract;
 }
