@@ -89,12 +89,12 @@ async function main(contract) {
     console.log("Sending data to IPFS...")
     let transactionResponseSetHash
     //send data
-    await client.add(JSON.stringify(jsonArray)).then((res) => {
+    await client.add(JSON.stringify(jsonArray)).then(async (res) => {
         //here I have to call the contract and send the hash
         console.log("Sending new hash to contract...")
         console.log(res)
         const startSetHash = Date.now();
-        transactionResponseSetHash = contract.sendHash(res.path)
+        transactionResponseSetHash = await contract.sendHash(res.path)
         const endSetHash = Date.now()
         const durationSetHash = endSetHash - startSetHash
         console.log("Writing duration of calling setHash function inside duration-SET-HASH.txt...")
