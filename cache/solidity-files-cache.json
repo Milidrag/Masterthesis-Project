@@ -1,0 +1,40 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "C:\\Users\\Milo\\Documents\\FH Campus Wien\\Masterarbeit\\Projekt\\masterproject\\contracts\\1_Storage.sol": {
+      "lastModificationDate": 1679344100074,
+      "contentHash": "bf76c5267f1ac118e5864afdbd12a0ef",
+      "sourceName": "contracts/1_Storage.sol",
+      "solcConfig": {
+        "version": "0.8.7",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.8.7"
+      ],
+      "artifacts": [
+        "Storage"
+      ]
+    }
+  }
+}
