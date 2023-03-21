@@ -1,0 +1,2 @@
+Gas used for store function: 90028
+Duration of store function: 4498 ms
