@@ -1,11 +1,11 @@
 const { Network, Alchemy, Wallet, Utils } = require("alchemy-sdk");
-const ethers = require("ethers");
+const hre = require("hardhat"); //use ether library to interact with the BC
 const fs = require("fs-extra");
 require('dotenv').config();
+const fetch = require("node-fetch");
 
 
-
-const { API_KEY_ALCHEMY_POLYGON, PRIVATE_KEY_GOERLI_ALICE, TRANSFER_SC_FUNCTION, CONTRACT_ADDRESS_MUMBAI, INFURA_PROJECT_ID, INFURA_API_SECRET } = process.env;
+const { API_KEY_ALCHEMY_POLYGON, PRIVATE_KEY_GOERLI_ALICE, TRANSFER_SC_FUNCTION, CONTRACT_ADDRESS_MUMBAI, INFURA_PROJECT_ID, INFURA_API_SECRET, CONTRACT_ADDRESS_MUMBAI_2 } = process.env;
 const settings = {
     apiKey: API_KEY_ALCHEMY_POLYGON,
     network: Network.MATIC_MUMBAI,
@@ -110,12 +110,30 @@ async function main(contract) {
     });
 
     //IPFS end
+
+
+
+    const response = await fetch('https://gasstation-mainnet.matic.network/v2');
+    const json = await response.json();
+
+    console.log("here is the json")
+    console.log(json)
+
+    fastValue = ethers.utils.parseUnits(Math.ceil(json.fast.maxPriorityFee).toString(), 'gwei');
+    maxFee = ethers.utils.parseUnits(Math.ceil(json.fast.maxFee).toString(), 'gwei');
+
     const transaction = {
-        to: CONTRACT_ADDRESS_MUMBAI,
+        to: CONTRACT_ADDRESS_MUMBAI_2,
         data: TRANSFER_SC_FUNCTION,
+        gasLimit: 100000,
+        maxPriorityFeePerGas: fastValue,
+        maxFeePerGas: maxFee,
         value: Utils.parseEther("0.001"),
         chainId: 80001, // Corresponds to Mumbai
     };
+
+
+
 
     const estimation = await contract.estimateGas.transfer();
     transaction.gasLimit = estimation
@@ -139,9 +157,10 @@ async function main(contract) {
 
 
 async function attach() {
-    const contractFactory = new ethers.ContractFactory(abi, binary, wallet);
+
+    contractFactory = await hre.ethers.getContractFactory("Storage");
     console.log("Attaching contract...")
-    const contract = await contractFactory.attach(CONTRACT_ADDRESS_MUMBAI);
+    const contract = await contractFactory.attach(CONTRACT_ADDRESS_MUMBAI_2);
 
     return contract;
 }
