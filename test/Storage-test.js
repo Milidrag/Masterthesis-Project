@@ -1,6 +1,7 @@
 const { ethers } = require("hardhat")
 const { INFURA_PROJECT_ID, INFURA_API_SECRET } = process.env;
-const fs = require("fs");
+const fetch = require("node-fetch");
+
 
 
 describe("Gas cost measurement", function () {
@@ -19,6 +20,7 @@ describe("Gas cost measurement", function () {
                 }
             })
     })
+
 
     it("Should deploy contract", async function () {  //want to deploy only once
         storageFactory = await ethers.getContractFactory("Storage")
@@ -95,4 +97,25 @@ describe("Gas cost measurement", function () {
             console.log("Duration of sendHash function with concat data:", duration.toString(), "ms");
         });
     })
+    /* TODO transfer function makes some issues. 
+        it("Should call the transfer function from smart contract and transfer ether", async function () {
+    
+            const response = await fetch('https://ethgasstation.info/api/ethgasAPI.json?');
+            const json = await response.json();
+    
+            const startTransfer = Date.now();
+            const tx = await storage.transfer({
+                value: ethers.utils.parseEther("0.001"),
+                gasLimit: 100000, //better not to set the values manually. the price will be calculated automatically at a fair fee. 
+                maxPriorityFeePerGas: ethers.utils.parseEther((json.fast).toString()),
+                maxFeePerGas: ethers.utils.parseEther((json.fast).toString()),
+            });
+            const endTransfer = Date.now()
+            const duration = endTransfer - startTransfer
+    
+            const receipt = await tx.wait();
+    
+            console.log("Gas used for sendHash function with concat data:", receipt.gasUsed.toString());
+            console.log("Duration of sendHash function with concat data:", duration.toString(), "ms");
+        }) */
 })
