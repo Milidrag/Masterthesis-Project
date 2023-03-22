@@ -26,6 +26,7 @@ module.exports = {
     outputFile: "gas-report.txt",
     noColors: true,
     coinmarketcap: COINMARKET,
-    token: "MATIC"
+    token: "MATIC",
+    gasPriceApi: "https://api.polygonscan.com/api?module=proxy&action=eth_gasPrice"
   }
 };
