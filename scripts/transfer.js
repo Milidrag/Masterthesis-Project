@@ -12,8 +12,7 @@ const settings = {
 
 const alchemy = new Alchemy(settings);
 const wallet = new Wallet(PRIVATE_KEY_GOERLI_ALICE, alchemy);
-const abi = fs.readFileSync("./1_Storage_sol_Storage.abi", "utf8");
-const binary = fs.readFileSync("./1_Storage_sol_Storage.bin", "utf8");
+
 
 
 async function main(contract) {
