@@ -3,7 +3,7 @@ require('dotenv').config();
 require("hardhat-gas-reporter")
 
 
-const { PRIVATE_KEY_GOERLI_ALICE, PROVIDER_ALCHEMY_POLYGON, COINMARKET, ETHEREUM_EXPLORER_API_KEY, PRIVATE_KEY_GOERLI_BOB } = process.env
+const { PRIVATE_KEY_POLYGON_MAINNET_MILO, PROVICER_ALCHEMY_POLYGON_MAINNET, COINMARKET, ETHEREUM_EXPLORER_API_KEY } = process.env
 
 
 /** @type import('hardhat/config').HardhatUserConfig */
@@ -12,9 +12,9 @@ module.exports = {
   defaultNetwork: "mumbai",
   networks: {
     mumbai: {
-      url: PROVIDER_ALCHEMY_POLYGON,
-      accounts: [PRIVATE_KEY_GOERLI_BOB],
-      chainID: 80001
+      url: PROVICER_ALCHEMY_POLYGON_MAINNET,
+      accounts: [PRIVATE_KEY_POLYGON_MAINNET_MILO],
+      chainID: 137
     }
   },
   etherscan: {

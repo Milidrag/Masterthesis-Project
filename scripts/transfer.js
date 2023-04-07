@@ -5,16 +5,15 @@ require('dotenv').config();
 const fetch = require("node-fetch");
 
 
-const { API_KEY_ALCHEMY_POLYGON, PRIVATE_KEY_GOERLI_ALICE, TRANSFER_SC_FUNCTION, CONTRACT_ADDRESS_MUMBAI, INFURA_PROJECT_ID, INFURA_API_SECRET, CONTRACT_ADDRESS_MUMBAI_2 } = process.env;
+const { API_KEY_POLYGON_MAINNET, PRIVATE_KEY_POLYGON_MAINNET_MILO, TRANSFER_SC_FUNCTION, INFURA_PROJECT_ID, INFURA_API_SECRET, CONTRACT_ADDRESS_POLYGON_MAINNET } = process.env;
 const settings = {
-    apiKey: API_KEY_ALCHEMY_POLYGON,
-    network: Network.MATIC_MUMBAI,
+    apiKey: API_KEY_POLYGON_MAINNET,
+    network: Network.MATIC_MAINNET,
 };
 
 const alchemy = new Alchemy(settings);
-const wallet = new Wallet(PRIVATE_KEY_GOERLI_ALICE, alchemy);
-const abi = fs.readFileSync("./1_Storage_sol_Storage.abi", "utf8");
-const binary = fs.readFileSync("./1_Storage_sol_Storage.bin", "utf8");
+const wallet = new Wallet(PRIVATE_KEY_POLYGON_MAINNET_MILO, alchemy);
+
 
 
 async function main(contract) {
@@ -93,12 +92,12 @@ async function main(contract) {
 
     console.log("Sending data to IPFS...")
     //send data
-    await client.add(JSON.stringify(jsonArray)).then((res) => {
+    await client.add(JSON.stringify(jsonArray)).then(async (res) => {
         //here I have to call the contract and send the hash
         console.log("Sending new hash to contract...")
         console.log(res)
         const startSetHash = Date.now();
-        transactionResponseSetHash = contract.sendHash(res.path)
+        transactionReceiptSetHash = await contract.setHash(res.path)
         const endSetHash = Date.now()
         const durationSetHash = endSetHash - startSetHash
         console.log("Writing duration of calling setHash function inside duration-SET-HASH.txt...")
@@ -107,7 +106,21 @@ async function main(contract) {
                 console.log(err)
             }
         })
+        console.log("Calling block confirmation time of the SET Hash function...")
+        const BlockConfirmationTimeSetHashStart = Date.now()
+        await transactionReceiptSetHash.wait()
+        const BlockConfirmationTimeSetHashEnd = Date.now()
+        console.log("Writing block confirmation time inside duration-BlockConfirmationTime-SETHASH file...")
+        const BlockConfirmationTimeSetHashDuration = BlockConfirmationTimeSetHashEnd - BlockConfirmationTimeSetHashStart
+        fs.appendFile("./duration-BlockConfirmationTime-SETHASH.txt", BlockConfirmationTimeSetHashDuration.toString() + "\n", err => {     //writing duration to file
+            if (err) {
+                console.log(err)
+            }
+        })
     });
+
+
+
 
     //IPFS end
 
@@ -116,31 +129,25 @@ async function main(contract) {
     const response = await fetch('https://gasstation-mainnet.matic.network/v2');
     const json = await response.json();
 
-    console.log("here is the json")
     console.log(json)
 
     fastValue = ethers.utils.parseUnits(Math.ceil(json.fast.maxPriorityFee).toString(), 'gwei');
     maxFee = ethers.utils.parseUnits(Math.ceil(json.fast.maxFee).toString(), 'gwei');
 
     const transaction = {
-        to: CONTRACT_ADDRESS_MUMBAI_2,
+        to: CONTRACT_ADDRESS_POLYGON_MAINNET,
         data: TRANSFER_SC_FUNCTION,
-        gasLimit: 100000,
+        gasLimit: 200000,
         maxPriorityFeePerGas: fastValue,
         maxFeePerGas: maxFee,
         value: Utils.parseEther("0.001"),
-        chainId: 80001, // Corresponds to Mumbai
+        chainId: 137, // Corresponds to Mumbai
     };
 
 
-
-
-    const estimation = await contract.estimateGas.transfer();
-    transaction.gasLimit = estimation
-
     console.log("Start calling transfer function...")
     const startTransfer = Date.now();
-    let transactionResponseTransfer = await wallet.sendTransaction(transaction);
+    let transactionReceiptTransfer = await wallet.sendTransaction(transaction);
     const endTransfer = Date.now()
     console.log("End calling transfer function")
     const durationTransfer = endTransfer - startTransfer;
@@ -151,7 +158,17 @@ async function main(contract) {
         }
     })
 
-    console.log(transactionResponseTransfer)
+    console.log("Calling block confirmation time of the TRANSFER function...")
+    const BlockConfirmationTimeTransferStart = Date.now()
+    await transactionReceiptTransfer.wait()
+    const BlockConfirmationTimeTransferEnd = Date.now()
+    console.log("Writing block confirmation time inside duration-BlockConfirmationTime-TRANSFER file...")
+    const BlockConfirmationTimeTransferDuration = BlockConfirmationTimeTransferEnd - BlockConfirmationTimeTransferStart
+    fs.appendFile("./duration-BlockConfirmationTime-TRANSFER.txt", BlockConfirmationTimeTransferDuration.toString() + "\n", err => {     //writing duration to file
+        if (err) {
+            console.log(err)
+        }
+    })
 }
 
 
@@ -160,7 +177,7 @@ async function attach() {
 
     contractFactory = await hre.ethers.getContractFactory("Storage");
     console.log("Attaching contract...")
-    const contract = await contractFactory.attach(CONTRACT_ADDRESS_MUMBAI_2);
+    const contract = await contractFactory.attach(CONTRACT_ADDRESS_POLYGON_MAINNET);
 
     return contract;
 }
@@ -175,7 +192,7 @@ function myLoop(contract) {                                                     
                 process.exit(1)
             })
         i++;                                                                             //  increment the counter
-        if (i < 2) {                                                                    //  if the counter < 20, call the loop function
+        if (i < 4) {                                                                    //  if the counter < 20, call the loop function
             jsonReader("./data.json", (err, data) => {                                  //jsonReader takes the next line of data.json                
                 if (err) {
                     console.log(err);
@@ -191,7 +208,7 @@ function myLoop(contract) {                                                     
             myLoop(contract);             //  ..  again which will trigger another 
         }
 
-    }, 1000)  //the function is called every second from new     
+    }, 60000)  //the function is called every second from new     
 
 }
 
