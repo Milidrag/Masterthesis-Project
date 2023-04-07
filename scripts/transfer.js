@@ -5,14 +5,14 @@ require('dotenv').config();
 const fetch = require("node-fetch");
 
 
-const { API_KEY_ETHEREUM_MAINNET, PRIVATE_KEY_GOERLI_ALICE, TRANSFER_SC_FUNCTION, CONTRACT_ADDRESS_SEPOLIA } = process.env;
+const { API_KEY_ETHEREUM_MAINNET, PRIVATE_KEY_MAINNET_ETHEREUM_BARBARA, TRANSFER_SC_FUNCTION, CONTRACT_ADDRESS_ETHEREUM_MAINNET } = process.env;
 const settings = {
     apiKey: API_KEY_ETHEREUM_MAINNET,
     network: Network.ETH_MAINNET,
 };
 
 const alchemy = new Alchemy(settings);
-const wallet = new Wallet(PRIVATE_KEY_GOERLI_ALICE, alchemy);
+const wallet = new Wallet(PRIVATE_KEY_MAINNET_ETHEREUM_BARBARA, alchemy);
 
 
 
@@ -63,14 +63,14 @@ async function main(contract) {
     maxFeePerGas = ethers.utils.parseUnits(Math.ceil(json.blockPrices[0].estimatedPrices[0].maxFeePerGas).toString(), 'gwei');
 
     const transaction = {
-        to: CONTRACT_ADDRESS_SEPOLIA,
+        to: CONTRACT_ADDRESS_ETHEREUM_MAINNET,
         data: TRANSFER_SC_FUNCTION,
         value: Utils.parseEther("0.001"),
-        gasLimit: 100000, //better not to set the values manually. the price will be calculated automatically at a fair fee. 
+        gasLimit: 200000, //better not to set the values manually. the price will be calculated automatically at a fair fee. 
         maxPriorityFeePerGas: maxPriorityFeePerGas,
         maxFeePerGas: maxFeePerGas,
         type: 2,
-        chainId: 11155111,// Corresponds to ETH_GOERLI
+        chainId: 1,// Corresponds to ETH_GOERLI
     };
 
 
@@ -131,7 +131,7 @@ async function attach() {
 
     contractFactory = await hre.ethers.getContractFactory("Storage");
     console.log("Attaching contract...")
-    const contract = await contractFactory.attach(CONTRACT_ADDRESS_SEPOLIA);
+    const contract = await contractFactory.attach(CONTRACT_ADDRESS_ETHEREUM_MAINNET);
 
     return contract;
 }
