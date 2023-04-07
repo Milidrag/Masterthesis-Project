@@ -5,10 +5,10 @@ require('dotenv').config();
 const fetch = require("node-fetch");
 
 
-const { API_KEY_SEPOLIA, PRIVATE_KEY_GOERLI_ALICE, TRANSFER_SC_FUNCTION, CONTRACT_ADDRESS_SEPOLIA } = process.env;
+const { API_KEY_ETHEREUM_MAINNET, PRIVATE_KEY_GOERLI_ALICE, TRANSFER_SC_FUNCTION, CONTRACT_ADDRESS_SEPOLIA } = process.env;
 const settings = {
-    apiKey: API_KEY_SEPOLIA,
-    network: Network.ETH_SEPOLIA,
+    apiKey: API_KEY_ETHEREUM_MAINNET,
+    network: Network.ETH_MAINNET,
 };
 
 const alchemy = new Alchemy(settings);
@@ -62,7 +62,6 @@ async function main(contract) {
     maxPriorityFeePerGas = ethers.utils.parseUnits(Math.ceil(json.blockPrices[0].estimatedPrices[0].maxPriorityFeePerGas).toString(), 'gwei');
     maxFeePerGas = ethers.utils.parseUnits(Math.ceil(json.blockPrices[0].estimatedPrices[0].maxFeePerGas).toString(), 'gwei');
 
-    const chainId = await wallet.getChainId();
     const transaction = {
         to: CONTRACT_ADDRESS_SEPOLIA,
         data: TRANSFER_SC_FUNCTION,

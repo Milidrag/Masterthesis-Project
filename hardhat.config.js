@@ -3,23 +3,18 @@ require('dotenv').config();
 require("hardhat-gas-reporter")
 
 
-const { PRIVATE_KEY_GOERLI_ALICE, PROVIDER_ALCHEMY, COINMARKET, ETHEREUM_EXPLORER_API_KEY, PROVIDER_ALCHEMY_SEPOLIA } = process.env
+const { PRIVATE_KEY_MAINNET_ETHEREUM_BARBARA, COINMARKET, ETHEREUM_EXPLORER_API_KEY, PROVIDER_ALCHEMY_ETHEREUM_MAINNET } = process.env
 
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: "0.8.7",
-  defaultNetwork: "sepolia",
+  defaultNetwork: "main",
   networks: {
-    goerli: {
-      url: PROVIDER_ALCHEMY,
-      accounts: [PRIVATE_KEY_GOERLI_ALICE],
-      chainID: 5
-    },
-    sepolia: {
-      url: PROVIDER_ALCHEMY_SEPOLIA,
-      accounts: [PRIVATE_KEY_GOERLI_ALICE],
-      chainId: 11155111,
+    main: {
+      url: PROVIDER_ALCHEMY_ETHEREUM_MAINNET,
+      accounts: [PRIVATE_KEY_MAINNET_ETHEREUM_BARBARA],
+      chainID: 1
     }
   },
   etherscan: {

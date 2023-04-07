@@ -6,8 +6,8 @@ contract Storage {
     DataStorage[] public data;
 
     address payable[] contractPartners = [
-        payable(0xE4b3717A2b902327BCe7473F68A996Ea0860397F),
-        payable(0xB9fe0Ff0fC8CB73Be7A887e8319bA7AC7dD8ecEC)
+        payable(0x31A14E0B72BA801a354a2Dc5a7EB88Ee0bf9fD70),
+        payable(0x7FfD093575F930DA470B3D601d0CB823C44bB37a)
     ];
 
     struct DataStorage {
