@@ -1,10 +1,13 @@
 const { ethers } = require("hardhat")
 
+const { CONTRACT_ADDRESS_ETHEREUM_MAINNET } = process.env;
+
+
 describe("Gas cost measurement for store function", function () {
-    let storageFactory, storage
+    let contractFactory, storage
     beforeEach(async function () {
-        storageFactory = await ethers.getContractFactory("Storage")
-        storage = await storageFactory.deploy()
+        contractFactory = await hre.ethers.getContractFactory("Storage");
+        storage = await contractFactory.attach(CONTRACT_ADDRESS_ETHEREUM_MAINNET);
     })
     it("Gas cost measurement for store function", async function () {
         const iotData = JSON.stringify({
