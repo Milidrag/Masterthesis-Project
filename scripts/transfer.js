@@ -2,12 +2,13 @@ const { Network, Alchemy, Wallet, Utils } = require("alchemy-sdk");       //use 
 const hre = require("hardhat"); //use ether library to interact with the BC
 const fs = require("fs-extra");
 require('dotenv').config();
+const fetch = require("node-fetch");
 
 
-const { API_KEY, PRIVATE_KEY_GOERLI_ALICE, TRANSFER_SC_FUNCTION, CONTRACT_ADDRESS_GOERLI_3 } = process.env;
+const { API_KEY_SEPOLIA, PRIVATE_KEY_GOERLI_ALICE, TRANSFER_SC_FUNCTION, CONTRACT_ADDRESS_SEPOLIA } = process.env;
 const settings = {
-    apiKey: API_KEY,
-    network: Network.ETH_GOERLI,
+    apiKey: API_KEY_SEPOLIA,
+    network: Network.ETH_SEPOLIA,
 };
 
 const alchemy = new Alchemy(settings);
@@ -21,7 +22,7 @@ async function main(contract) {
 
     console.log("Start calling store function...")
     const startStore = Date.now();
-    let transactionResponseStore = await contract.store(jsonStringFirst);
+    let transactionResponseStore = await contract.store(jsonStringFirst, { gasLimit: 100000 });
     const endStore = Date.now()
     console.log("End calling store function")
     const durationStore = endStore - startStore;
@@ -52,14 +53,25 @@ async function main(contract) {
     const estimation = await contract.estimateGas.store(jsonString);
     console.log(`Estimation value of STORE-funciton is: ${hre.ethers.utils.formatEther(estimation)}`);
 
+    const response = await fetch('https://api.blocknative.com/gasprices/blockprices');
+    const json = await response.json();
+
+    console.log("here is the json")
+    console.log(JSON.stringify(json, null, 2));
+
+    maxPriorityFeePerGas = ethers.utils.parseUnits(Math.ceil(json.blockPrices[0].estimatedPrices[0].maxPriorityFeePerGas).toString(), 'gwei');
+    maxFeePerGas = ethers.utils.parseUnits(Math.ceil(json.blockPrices[0].estimatedPrices[0].maxFeePerGas).toString(), 'gwei');
+
+    const chainId = await wallet.getChainId();
     const transaction = {
-        to: CONTRACT_ADDRESS_GOERLI_3,
+        to: CONTRACT_ADDRESS_SEPOLIA,
         data: TRANSFER_SC_FUNCTION,
         value: Utils.parseEther("0.001"),
-        gasLimit: 50000, //better not to set the values manually. the price will be calculated automatically at a fair fee. 
-        maxPriorityFeePerGas: Utils.parseUnits("15", "wei"),
+        gasLimit: 100000, //better not to set the values manually. the price will be calculated automatically at a fair fee. 
+        maxPriorityFeePerGas: maxPriorityFeePerGas,
+        maxFeePerGas: maxFeePerGas,
         type: 2,
-        chainId: 5, // Corresponds to ETH_GOERLI
+        chainId: 11155111,// Corresponds to ETH_GOERLI
     };
 
 
@@ -120,7 +132,7 @@ async function attach() {
 
     contractFactory = await hre.ethers.getContractFactory("Storage");
     console.log("Attaching contract...")
-    const contract = await contractFactory.attach(CONTRACT_ADDRESS_GOERLI_3);
+    const contract = await contractFactory.attach(CONTRACT_ADDRESS_SEPOLIA);
 
     return contract;
 }
