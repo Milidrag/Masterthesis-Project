@@ -1,6 +1,6 @@
 const hre = require("hardhat");
 
-
+//deploy to polygon mainnet
 async function main() {
 
     const Storage = await hre.ethers.getContractFactory("Storage");
