@@ -4,7 +4,7 @@ const fs = require("fs-extra");    //fs-extra package is a library to interact w
 require('dotenv').config();        //dotenv package is used to hide private data on public repository. the ".env"-file is not committed on the repository
 
 
-const { CONTRACT_ADDRESS_IOTA } = process.env;
+const { CONTRACT_ADDRESS_IOTA_3 } = process.env;
 
 
 async function main(contract) {
@@ -92,10 +92,10 @@ async function main(contract) {
 
 
 async function attach() {
-    const SimpleStorage = await ethers.getContractFactory("StorageString");
+    const SimpleStorage = await ethers.getContractFactory("Storage");
     console.log("Attaching, please wait...");
     const contract = await SimpleStorage.attach(
-        CONTRACT_ADDRESS_IOTA
+        CONTRACT_ADDRESS_IOTA_3
     );
 
     return contract;

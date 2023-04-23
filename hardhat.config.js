@@ -1,13 +1,15 @@
 require("@nomicfoundation/hardhat-toolbox");
+require('dotenv').config();
 
-/** @type import('hardhat/config').HardhatUserConfig */
+const { PRIVATE_KEY_ALICE } = process.env
+
 module.exports = {
-  solidity: "0.8.18",
+  solidity: "0.8.7",
   defaultNetwork: "shimmerTest",
   networks: {
     shimmerTest: {
-      url: "https://api.sc.testnet.shimmer.network/evm/jsonrpc",
-      accounts: ["0xe1ec520d880d5f95b17e97fcfd56ed9a77ecca3c455a9bcaca72ab8543483537"],
+      url: "https://json-rpc.evm.testnet.shimmer.network",
+      accounts: [PRIVATE_KEY_ALICE],
       timeout: 60000
     }
   }

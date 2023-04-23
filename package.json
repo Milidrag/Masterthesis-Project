@@ -26,5 +26,10 @@
   },
   "dependencies": {
     "fs-extra": "^11.1.0"
+  },
+  "scripts": {
+    "compile": "yarn solcjs --bin --abi --inlcude-path node_modules/ --base-path . -o . 1_Storage.sol",
+    "deploy": "yarn hardhat run scripts/deploy.js",
+    "transfer": "yarn hardhat run scripts/transfer.js"
   }
 }

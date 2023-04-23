@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.8.18;
+pragma solidity 0.8.7;
 
-contract StorageString {
+contract Storage {
     string[] public data;
 
     address payable[] contractPartners = [
-        payable(0xE4b3717A2b902327BCe7473F68A996Ea0860397F),
+        payable(0x157EF7ADDc804397CB5966dbCc003e163a473D0c),
         payable(0xB9fe0Ff0fC8CB73Be7A887e8319bA7AC7dD8ecEC)
     ];
 
