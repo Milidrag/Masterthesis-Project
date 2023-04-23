@@ -9,38 +9,40 @@ const { CONTRACT_ADDRESS_IOTA_3 } = process.env;
 
 async function main(contract) {
 
-    jsonString = fs.readFileSync("./data.json", "utf-8");                              //reading from the local FS
-    jsonStringFirst = JSON.parse(jsonString)[0];                                       //take the first value
-    console.log("This value will be stored on the BC ");
-    console.log(jsonStringFirst);
-
-
-    console.log("Start calling store-function...")
-    const startStore = Date.now();
-    const transactionResponseStore = await contract.store(JSON.stringify(jsonStringFirst));
-    const endStore = Date.now()
-    const durationStore = endStore - startStore;
-    console.log("Writing duration of store-function to duration-store.txt file...")
-    fs.appendFile("./duration-store.txt", durationStore.toString() + "\n", err => {     //writing duration to file
-        if (err) {
-            console.log(err)
-        }
-    })
-
-
-    console.log("Calling block confirmation time of the STORE function...")
-    const BlockConfirmationTimeStoreStart = Date.now()
-    await transactionResponseStore.wait()
-    const BlockConfirmationTimeStoreEnd = Date.now()
-    console.log("Writing block confirmation time inside duration-BlockConfirmationTime-STORE file...")
-    const BlockConfirmationTimeStoreDuration = BlockConfirmationTimeStoreEnd - BlockConfirmationTimeStoreStart
-    fs.appendFile("./duration-BlockConfirmationTime-STORE.txt", BlockConfirmationTimeStoreDuration.toString() + "\n", err => {     //writing duration to file
-        if (err) {
-            console.log(err)
-        }
-    })
-
-
+    /*     jsonString = fs.readFileSync("./data.json", "utf-8");                              //reading from the local FS
+        jsonStringFirst = JSON.parse(jsonString)[0];                                       //take the first value
+        console.log("This value will be stored on the BC ");
+        console.log(jsonStringFirst);
+    
+    
+        console.log("Start calling store-function...")
+        const startStore = Date.now();
+        const transactionResponseStore = await contract.store(JSON.stringify(jsonStringFirst));
+        const endStore = Date.now()
+        const durationStore = endStore - startStore;
+        console.log("Writing duration of store-function to duration-store.txt file...")
+        fs.appendFile("./duration-store.txt", durationStore.toString() + "\n", err => {     //writing duration to file
+            if (err) {
+                console.log(err)
+            }
+        })
+    
+    
+        console.log("Calling block confirmation time of the STORE function...")
+        const BlockConfirmationTimeStoreStart = Date.now()
+        await transactionResponseStore.wait()
+        const BlockConfirmationTimeStoreEnd = Date.now()
+        console.log("Writing block confirmation time inside duration-BlockConfirmationTime-STORE file...")
+        const BlockConfirmationTimeStoreDuration = BlockConfirmationTimeStoreEnd - BlockConfirmationTimeStoreStart
+        fs.appendFile("./duration-BlockConfirmationTime-STORE.txt", BlockConfirmationTimeStoreDuration.toString() + "\n", err => {     //writing duration to file
+            if (err) {
+                console.log(err)
+            }
+        })
+    
+    
+        console.log("watch this...")
+        console.log(transactionResponseStore) */
 
     console.log("Transaction started...")
     const startTransfer = Date.now();
@@ -67,6 +69,9 @@ async function main(contract) {
             console.log(err)
         }
     })
+
+    console.log("watch this...")
+    console.log(transactionResponseTransfer)
 
 
     //Recommend to reduce the loop to one circulation. Then comment in the lines below to receive an output. Reason is to have a reduced output for better legibility
@@ -111,7 +116,7 @@ function myLoop(contract) {                                                     
                 process.exit(1)
             })
         i++;                                                                             //  increment the counter
-        if (i < 6) {                                                                    //  if the counter < 20, call the loop function
+        if (i < 2) {                                                                    //  if the counter < 20, call the loop function
             jsonReader("./data.json", (err, data) => {                                  //jsonReader takes the next line of data.json                
                 if (err) {
                     console.log(err);
