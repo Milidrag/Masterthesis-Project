@@ -10,16 +10,8 @@ Transfer 1:
 https://etherscan.io/vmtrace?txhash=0xcd970b5a354e666cd9bcd6f508b6b123dd9a1c239f4fd0a9e83fb2b0e5a2351b
 189 executed opcodes
 
-Store 2: 
-https://etherscan.io/vmtrace?txhash=0x844d0f6b68a2e7a46cbaeceab3c3028154b2463cb9c581a6125dd7fd72cefb0f
-583 executed opcodes
 
-Transfer 2:
-https://etherscan.io/vmtrace?txhash=0xa2838026b2dd0510adbe4cc39bfed852ed220be020c80bf3f6e42990eb831a4c
-189 executed opcodes
-
-
-Average Store = 583
+Average Store = 517
 Average Transfer = 189
 
 
