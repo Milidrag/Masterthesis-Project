@@ -1,0 +1,56 @@
+Ethereum-Mainnet: 
+CONTRACT_ADDRESS_ETHEREUM_MAINNET=0x5FbCebACD98fC1a22aB825cA666B75733D3B2C01
+URL: https://etherscan.io/address/0x5fbcebacd98fc1a22ab825ca666b75733d3b2c01
+
+Store 1: 
+https://etherscan.io/vmtrace?txhash=0x305e1967a5b52d4fe174e54eb8a8655aa3516f6eefdb21755206bf0c43fc77b5
+517 executed opcodes
+
+Transfer 1: 
+https://etherscan.io/vmtrace?txhash=0xcd970b5a354e666cd9bcd6f508b6b123dd9a1c239f4fd0a9e83fb2b0e5a2351b
+189 executed opcodes
+
+Store 2: 
+https://etherscan.io/vmtrace?txhash=0x844d0f6b68a2e7a46cbaeceab3c3028154b2463cb9c581a6125dd7fd72cefb0f
+583 executed opcodes
+
+Transfer 2:
+https://etherscan.io/vmtrace?txhash=0xa2838026b2dd0510adbe4cc39bfed852ed220be020c80bf3f6e42990eb831a4c
+189 executed opcodes
+
+
+Average Store = 583
+Average Transfer = 189
+
+
+Polygon - Mainnet: 
+CONTRACT_ADDRESS_POLYGON_MAINNET=0xDFaef1a90d388c1c87a92d1396722bCf045Ebe37
+URL: https://polygonscan.com/address/0xdfaef1a90d388c1c87a92d1396722bcf045ebe37
+
+
+SetHash 1: 
+https://polygonscan.com/vmtrace?txhash=0x3f36cd38bc8c49374359267426c1f3d376d8e7db24984345a1640e7d41eb1343
+447 executed opcodes
+
+Transfer 1: 
+https://polygonscan.com/vmtrace?txhash=0xf0a1b566ccbf92d67cf721879ff2175a70f57fc47a5ca4af99778f8b76e16646
+225 executed opcodes
+
+SetHash 2: 
+https://polygonscan.com/vmtrace?txhash=0xebbae83a4a5d4b4dba0a0ca2c542967f9fa03e53d5a163f6254c5f6668ed3d7f
+442 executed opcodes
+
+Transfer 2:
+https://polygonscan.com/vmtrace?txhash=0xdebd16a9eaf0c0606ca1aeb72591dc740cbfc5069c8d02bba1900aa6aa9d6aae
+225 executed opcodes
+
+SetHash 3: 
+https://polygonscan.com/vmtrace?txhash=0x304e874b33c5566d5c5fc70d1a44ab648e2cc0c883f4d4a7ce222e6c8266a43e
+442 executed opcodes
+
+Transfer 3:
+https://polygonscan.com/vmtrace?txhash=0x804cc9f4d9ab2f9d6329cbe4917a09ff97621304298631ba2181aef27a17a42c
+225 executed opcodes
+
+Average SetHash = 444
+Average Transfer = 225
