@@ -23,7 +23,8 @@ In case the contract is deleted from the Shimmer test network, you have to deplo
 4. Open the `.env` -file 
 5. Paste the copied address as a value of the key `CONTRACT_ADDRESS_IOTA_3` 
 6. You should now have `CONTRACT_ADDRESS_IOTA_3=0xD2e1b57affAB75BC4cd571e6A8C2AcbfAc73016B` but with your contract address 
-7. Now you can run "npm run transfer" and the data is sent to the tangle 
+7. Now you can run `npm run transfer` and the data is sent to the tangle 
 
 ## data.json is empty
-In case the data.json is empty, which is the buffer file just copy & paste the content from `data-backup.json` into the `data.json` file
+In case the data.json is empty, which is the buffer file, just copy & paste the content from `data-backup.json` into the `data.json` file
+Then the transfer routine should run again
