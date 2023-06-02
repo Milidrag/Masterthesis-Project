@@ -9,7 +9,7 @@ const { CONTRACT_ADDRESS_IOTA_3 } = process.env;
 
 async function main(contract) {
 
-    /*     jsonString = fs.readFileSync("./data.json", "utf-8");                              //reading from the local FS
+        jsonString = fs.readFileSync("./data.json", "utf-8");                              //reading from the local FS
         jsonStringFirst = JSON.parse(jsonString)[0];                                       //take the first value
         console.log("This value will be stored on the BC ");
         console.log(jsonStringFirst);
@@ -42,7 +42,7 @@ async function main(contract) {
     
     
         console.log("watch this...")
-        console.log(transactionResponseStore) */
+        console.log(transactionResponseStore) 
 
     console.log("Transaction started...")
     const startTransfer = Date.now();
