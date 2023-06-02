@@ -2,7 +2,7 @@
 
 This is the public repository of my Masterthesis project. 
 
-Three branches are relevant (Ethereum-Main network Branch](https://github.com/Milidrag/Masterthesis-Project/tree/ethereum-mainnet))
+Three branches are relevant to run the examples described in the thesis 
 
 - [x] [Ethereum- main network](https://github.com/Milidrag/Masterthesis-Project/tree/ethereum-mainnet)
 - [x] [IOTA- main network](https://github.com/Milidrag/Masterthesis-Project/tree/iota)
