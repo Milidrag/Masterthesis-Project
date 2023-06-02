@@ -9,7 +9,7 @@ This document desribes the necessary steps to install and run the project locall
 ## Download the repository and switch to the IOTA branch 
 1. Download the repository `git clone https://github.com/Milidrag/Masterthesis-Project.git`
 2. Change the working directory into the downloaded folder `cd Masterthesis-Project`
-3. Switch the repository to the IOTA branch 'git switch ethereum-mainnet'
+3. Switch the repository to the IOTA branch `git switch ethereum-mainnet`
 
 ## Install the project
 1. Install the required dependencies `npm install`
