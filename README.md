@@ -11,3 +11,5 @@ Three branches are relevant to run the examples described in the thesis
 The other branches are test branches which have not been subject of the thesis. 
 
 The branches of Ethereum, Polygon and IOTA also contain information how to set up and run the examples in their readme files. 
+
+The VMTrace.txt file contains the path to the VMTrace resolved EVM executed opcodes, provided by blockchain explorer. 
